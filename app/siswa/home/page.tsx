@@ -31,8 +31,8 @@ export default function ProfilePage() {
 
   // Mock user data - dalam implementasi nyata, ini akan diambil dari API
   const [user, setUser] = useState({
-    name: "Anita Susanti",
-    photo: "https://i.pravatar.cc/150?img=5",
+    name: "Annisa",
+    photo: null, // We'll use initials instead of photo
     achievements: {
       completed: 6, // Completed 6 times, so gets silver badge
     },
@@ -203,6 +203,12 @@ export default function ProfilePage() {
   
   const statusInfo = getStatusInfo();
 
+  // Get user initials for avatar fallback
+  const getUserInitials = () => {
+    if (!user.name) return "";
+    return user.name.split(" ").map(n => n[0]).join("");
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Main content container */}
@@ -224,8 +230,8 @@ export default function ProfilePage() {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="h-full w-full bg-red-600 flex items-center justify-center text-white text-2xl font-bold">
-                      {user.name.split(" ").map(n => n[0]).join("")}
+                    <div className="h-full w-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+                      {getUserInitials()}
                     </div>
                   )}
                 </div>
@@ -234,16 +240,6 @@ export default function ProfilePage() {
               {/* User info */}
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-primary-600">{user.name}</h2>
-                
-                {/* TTD Counter Badge */}
-                <div className="mt-1 flex items-center">
-                  <div className="mr-2 p-1 bg-red-600 rounded-full shadow-sm">
-                    <Award className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="text-sm font-medium text-gray-700">
-                    Konsumsi TTD Ke-{user.currentMonth.ttdCount}
-                  </span>
-                </div>
                 
                 {/* Achievement badge */}
                 {badgeInfo && (
