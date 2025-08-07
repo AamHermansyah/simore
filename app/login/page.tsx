@@ -142,7 +142,7 @@ export default function LoginPage() {
 
               <div className="flex justify-end">
                 <Link
-                  href="/Login/forgot-password"
+                  href="/login/forgot-password"
                   className="text-xs text-primary hover:underline"
                 >
                   Lupa kata sandi?
@@ -160,7 +160,7 @@ export default function LoginPage() {
                   </>
                 ) : (
                   <>
-                    Masuk <ArrowRight className="ml-2 h-5 w-5" />
+                    Masuk
                   </>
                 )}
               </Button>
