@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+// Generate random integer between min and max (inclusive)
+export function getRandomInt(min: number, max: number): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Format date to Indonesia locale
@@ -24,30 +24,23 @@ export function daysDifference(date1: Date, date2: Date): number {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
-// Generate random integer between min and max (inclusive)
-export function getRandomInt(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 // Get report status based on last report date
 export function getReportStatus(lastReportDate: Date | null): {
   status: 'Belum Pernah' | 'Terlambat' | 'Tepat Waktu' | 'Hampir Terlambat';
   color: string;
 } {
   if (!lastReportDate) {
-    return { status: 'Belum Pernah', color: 'destructive' };
+    return { status: 'Belum Pernah', color: 'badge-danger' };
   }
   
   const today = new Date();
   const daysDiff = daysDifference(lastReportDate, today);
   
   if (daysDiff > 14) {
-    return { status: 'Terlambat', color: 'destructive' };
+    return { status: 'Terlambat', color: 'badge-danger' };
   } else if (daysDiff > 10) {
-    return { status: 'Hampir Terlambat', color: 'warning' };
+    return { status: 'Hampir Terlambat', color: 'badge-warning' };
   } else {
-    return { status: 'Tepat Waktu', color: 'success' };
+    return { status: 'Tepat Waktu', color: 'badge-success' };
   }
 }
