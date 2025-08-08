@@ -154,7 +154,7 @@ export default function DataDiriPage() {
           >
             <Button 
               className="w-full bg-red-500 hover:bg-red-600 text-white h-10 rounded-lg font-medium text-sm shadow-sm"
-              onClick={() => router.push('/edit-data-diri')}
+              onClick={() => router.push('edit_data')}
             >
               <Edit className="h-4 w-4 mr-2" />
               Ubah Data Diri
