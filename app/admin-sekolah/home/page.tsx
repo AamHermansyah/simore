@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Header } from "../components/Header";
 import BottomNav from "../components/BottomNav";
-import { LineChart } from "lucide-react";
+import StudentCard from "../components/StudentCard"; // Import komponen StudentCard
 
 // Type definitions
 interface DashboardStats {
@@ -22,8 +22,8 @@ interface RecentReport {
   id: number;
   name: string;
   class: string;
-  date: Date;
-  status: "pending" | "approved" | "rejected";
+  date: Date | string;
+  status: "pending" | "approved" | "rejected" | "completed" | "inProcess";
   imageUrl: string;
 }
 
@@ -36,6 +36,8 @@ interface ChartData {
 
 // Helper function to format dates
 const formatDate = (date) => {
+  if (typeof date === 'string') return date;
+  
   const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
   return new Intl.DateTimeFormat('id-ID', options).format(date);
 };
@@ -332,134 +334,79 @@ const BarChartComponent = ({ data }) => {
   );
 };
 
-// Image Modal Component
-const ImageModal = ({ isOpen, imageUrl, onClose }) => {
-  if (!isOpen) return null;
-  
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="relative max-w-lg max-h-[80vh] overflow-hidden">
-        <button 
-          className="absolute top-2 right-2 bg-white rounded-full p-1"
-          onClick={(e) => { e.stopPropagation(); onClose(); }}
-        >
-          <X className="h-5 w-5" />
-        </button>
-        <img 
-          src={imageUrl} 
-          alt="Laporan Siswa" 
-          className="max-w-full max-h-[80vh] object-contain rounded-lg"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-    </div>
-  );
-};
-
-// Updated Recent Reports Component with revised approval buttons logic
+// Komponen Laporan Terbaru yang Menggunakan StudentCard
 const RecentReports = ({ reports, onUpdateStatus }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+  // Konversi format status untuk StudentCard
+  const convertStatus = (status) => {
+    switch(status) {
+      case "approved": return "completed";
+      case "rejected": return "rejected";
+      case "pending": return "inProcess";
+      default: return status;
+    }
+  };
   
+  // Format data siswa untuk StudentCard
+  const formatStudentData = (report) => {
+    return {
+      id: report.id,
+      name: report.name,
+      class: report.class,
+      date: typeof report.date === 'string' ? report.date : formatDate(report.date),
+      status: convertStatus(report.status),
+      imageUrl: report.imageUrl
+    };
+  };
+
+  // Handle validasi untuk StudentCard
+  const handleValidation = (studentId, newStatus) => {
+    // Konversi format status kembali ke format dashboard
+    let dashboardStatus;
+    switch(newStatus) {
+      case "completed": dashboardStatus = "approved"; break;
+      case "rejected": dashboardStatus = "rejected"; break;
+      case "inProcess": dashboardStatus = "pending"; break;
+      default: dashboardStatus = newStatus;
+    }
+    
+    onUpdateStatus(studentId, dashboardStatus);
+  };
+
   return (
-    <>
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ClipboardCheck className="h-5 w-5 text-red-600" />
-              <CardTitle className="text-base">Laporan Terbaru</CardTitle>
-            </div>
-            <Button variant="ghost" className="text-red-600 h-8 px-2 text-sm">
-              Lihat <Eye className="h-4 w-4 ml-1" />
-            </Button>
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ClipboardCheck className="h-5 w-5 text-red-600" />
+            <CardTitle className="text-base">Laporan Terbaru</CardTitle>
           </div>
-        </CardHeader>
-        
-        <CardContent>
-          <div className="space-y-3">
-            {reports.slice(0, 3).map((report) => (
-              <div key={report.id} className="bg-gray-50 p-3 rounded-lg text-xs transition-all hover:bg-gray-100 relative">
-                {/* Status indicator in top right corner */}
-                {report.status === "approved" && (
-                  <button 
-                    className="absolute top-2 right-2 p-1 rounded-full bg-green-100 text-green-600"
-                    onClick={() => onUpdateStatus(report.id, "pending")}
-                  >
-                    <Check className="h-4 w-4" />
-                  </button>
-                )}
-                
-                {report.status === "rejected" && (
-                  <button 
-                    className="absolute top-2 right-2 p-1 rounded-full bg-red-100 text-red-600"
-                    onClick={() => onUpdateStatus(report.id, "pending")}
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-                
-                <div className="flex gap-3">
-                  {/* Thumbnail */}
-                  <div 
-                    className="w-12 h-12 bg-gray-200 rounded-md overflow-hidden flex-shrink-0 cursor-pointer relative"
-                    onClick={() => setSelectedImage(report.imageUrl)}
-                  >
-                    {report.imageUrl ? (
-                      <img 
-                        src={report.imageUrl} 
-                        alt={`Laporan ${report.name}`} 
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full">
-                        <ImageIcon className="h-5 w-5 text-gray-400" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-1">
-                      <p className="font-medium">{report.name}</p>
-                      
-                      {/* Approval buttons - only show in pending state */}
-                      {report.status === "pending" && (
-                        <div className="flex gap-1">
-                          <button 
-                            className="p-1 rounded-full bg-gray-100 hover:bg-green-100 hover:text-green-600"
-                            onClick={() => onUpdateStatus(report.id, "approved")}
-                          >
-                            <Check className="h-3.5 w-3.5" />
-                          </button>
-                          <button 
-                            className="p-1 rounded-full bg-gray-100 hover:bg-red-100 hover:text-red-600"
-                            onClick={() => onUpdateStatus(report.id, "rejected")}
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <p className="text-gray-500">Kelas {report.class}</p>
-                      <p className="text-gray-500">{formatDate(report.date)}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+          <Button variant="ghost" className="text-red-600 h-8 px-2 text-sm">
+            Lihat <Eye className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      </CardHeader>
       
-      {/* Image modal */}
-      <ImageModal 
-        isOpen={!!selectedImage} 
-        imageUrl={selectedImage} 
-        onClose={() => setSelectedImage(null)} 
-      />
-    </>
+      <CardContent>
+        <div className="space-y-3">
+          {reports.length > 0 ? (
+            reports.slice(0, 3).map((report, index) => (
+              <div key={report.id} className="bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-all">
+                <StudentCard
+                  student={formatStudentData(report)}
+                  onValidation={handleValidation}
+                  showValidationButtons={true}
+                  className="bg-transparent shadow-none p-0 m-0"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-gray-500 text-sm">Belum ada laporan terbaru</p>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -500,7 +447,7 @@ export default function ModernDashboard() {
       average: 88
     });
     
-    // Data laporan terbaru
+    // Data laporan terbaru - urutkan berdasarkan tanggal terbaru
     setRecentReports([
       { 
         id: 1, 
