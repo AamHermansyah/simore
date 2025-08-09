@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowRight, Mail, Lock } from "lucide-react";
+import { auth } from "@/data/dummyData";
 
 // Form validation schema
 const loginSchema = z.object({
@@ -48,21 +49,47 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      // In a real app, you would call your API here
+      // Simulasi penundaan jaringan
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // For demo purposes, route based on email domain
-      if (data.email.includes("siswa")) {
-        router.push("/siswa");
-      } else if (data.email.includes("adminsekolah")) {
-        router.push("/admin_sekolah");
-      } else if (data.email.includes("adminpuskesmas")) {
-        router.push("/admin_puskesmas");
-      } else if (data.email.includes("admin")) {
-        router.push("/admin");
-      } else {
-        // Default to siswa
-        router.push("/siswa");
+      // Cek login berdasarkan email dan password
+      let userFound = false;
+
+      // Cek admin sistem
+      const adminUser = auth.loginAdmin(data.email, data.password);
+      if (adminUser) {
+        userFound = true;
+        router.push('/admin/dashboard');
+        return;
+      }
+
+      // Cek admin sekolah
+      const adminSekolahUser = auth.loginAdminSekolah(data.email, data.password);
+      if (adminSekolahUser) {
+        userFound = true;
+        router.push('/admin_sekolah/dashboard');
+        return;
+      }
+
+      // Cek admin puskesmas
+      const adminPuskesmasUser = auth.loginAdminPuskesmas(data.email, data.password);
+      if (adminPuskesmasUser) {
+        userFound = true;
+        router.push('/admin_puskesmas/dashboard');
+        return;
+      }
+
+      // Cek siswa
+      const siswaUser = auth.loginSiswa(data.email, data.password);
+      if (siswaUser) {
+        userFound = true;
+        router.push('/siswa/home');
+        return;
+      }
+
+      // Jika tidak ada user yang ditemukan
+      if (!userFound) {
+        throw new Error("Login gagal. Email atau password salah.");
       }
     } catch (err) {
       setError("Login gagal. Periksa email dan kata sandi Anda.");
