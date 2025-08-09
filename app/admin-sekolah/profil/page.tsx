@@ -12,7 +12,9 @@ import {
   HelpCircle, 
   LogOut, 
   ChevronRight, 
-  School
+  School,
+  Building,
+  Stethoscope
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -26,17 +28,17 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 
-export default function ProfilPage() {
+export default function ProfilSekolahPage() {
   const router = useRouter();
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Mock user data
-  const userData = {
-    name: "Annisa",
+  // Mock admin data
+  const adminData = {
+    name: "Budi Santoso",
     photo: null, // We'll handle this case and show initials if no photo
-    school: "SMAN 1 Tasik",
-    class: "XII IPA 2"
+    school: "MTSN 4 Tasikmalaya",
+    puskesmas: "Puskesmas Cihideung"
   };
 
   useEffect(() => {
@@ -52,23 +54,23 @@ export default function ProfilPage() {
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-    if (!userData.name) return "";
-    return userData.name.split(" ").map(n => n[0]).join("");
+    if (!adminData.name) return "";
+    return adminData.name.split(" ").map(n => n[0]).join("");
   };
 
   // Menu items
   const menuSections = [
     {
-      title: "Personal",
+      title: "Sekolah",
       items: [
         { 
           icon: <User className="h-4 w-4 text-gray-500" />, 
           text: "Profil", 
-          link: "profil/data_diri" 
+          link: "profil/data_admin" 
         },
         { 
           icon: <Settings className="h-4 w-4 text-gray-500" />, 
-          text: "Settings", 
+          text: "Pengaturan", 
           link: "profil/settings" 
         }
       ]
@@ -78,7 +80,7 @@ export default function ProfilPage() {
       items: [
         { 
           icon: <MessageCircle className="h-4 w-4 text-gray-500" />, 
-          text: "Official WhatsApp", 
+          text: "WhatsApp Pusat", 
           link: "https://api.whatsapp.com/send/?phone=08985686144&text&type=phone_number&app_absent=0" 
         }
       ]
@@ -105,7 +107,7 @@ export default function ProfilPage() {
       {/* Header with title */}
       <header className="sticky top-0 z-10 bg-red-500 shadow-sm">
         <div className="px-4 py-2.5 flex items-center justify-center">
-          <h1 className="text-white text-base font-bold">Profil</h1>
+          <h1 className="text-white text-base font-bold">Profil Sekolah</h1>
         </div>
       </header>
 
@@ -114,7 +116,7 @@ export default function ProfilPage() {
         <div className="w-full">
           {/* Profile Card */}
           <Card 
-            className={`border-0 py-3 bg-red-500 rounded-lg shadow-md mb-4 transition-all duration-500 ${
+            className={`border-0 py-2 bg-red-500 rounded-lg shadow-md mb-4 transition-all duration-500 ${
               isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
             }`}
           >
@@ -122,10 +124,10 @@ export default function ProfilPage() {
               {/* Profile Photo */}
               <div className="mr-3.5 relative">
                 <div className="h-14 w-14 rounded-full overflow-hidden bg-white flex items-center justify-center border-2 border-white">
-                  {userData.photo ? (
+                  {adminData.photo ? (
                     <img 
-                      src={userData.photo} 
-                      alt={userData.name} 
+                      src={adminData.photo} 
+                      alt={adminData.name} 
                       className="h-full w-full object-cover"
                     />
                   ) : (
@@ -136,16 +138,17 @@ export default function ProfilPage() {
                 </div>
               </div>
               
-              {/* User Info */}
+              {/* Admin Info */}
               <div className="text-white">
-                <h2 className="font-bold text-base">{userData.name}</h2>
-                <div className="flex items-center text-xs">
-                  <School className="h-3 w-3 mr-1" />
-                  <span>{userData.school}</span>
+                <h2 className="font-bold text-base">{adminData.name}</h2>
+                <div className="flex items-center text-xs mt-0.5">
+                  <Building className="h-3 w-3 mr-1" />
+                  <span>{adminData.school}</span>
                 </div>
-                <p className="text-xs opacity-90">
-                  {userData.class}
-                </p>
+                <div className="flex items-center text-xs mt-0.5">
+                  <Stethoscope className="h-3 w-3 mr-1" />
+                  <span className="opacity-90">{adminData.puskesmas}</span>
+                </div>
               </div>
             </div>
           </Card>
@@ -163,25 +166,25 @@ export default function ProfilPage() {
                 <h3 className="text-gray-500 font-medium text-xs mb-1.5 px-1">
                   {section.title}
                 </h3>
-                <Card className="border-0 py-2 rounded-lg overflow-hidden shadow-sm">
-                  <div className="flex flex-col">  
-                  {section.items.map((item, itemIndex) => (
-                    <Link 
-                      key={item.text} 
-                      href={item.link}
-                      className={`flex items-center justify-between p-3 hover:bg-gray-50 transition-colors ${
-                        itemIndex < section.items.length - 1 ? 'border-b border-gray-100' : ''
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <div className="mr-2.5 bg-gray-100 p-1.5 rounded-full">
-                          {item.icon}
+                <Card className="border-0 py-3 rounded-lg overflow-hidden shadow-sm">
+                  <div className="flex flex-col">
+                    {section.items.map((item, itemIndex) => (
+                      <Link 
+                        key={item.text} 
+                        href={item.link}
+                        className={`flex items-center justify-between py-2 px-3 hover:bg-gray-50 transition-colors ${
+                          itemIndex < section.items.length - 1 ? 'border-b border-gray-100' : ''
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <div className="mr-2.5 bg-gray-100 p-1.5 rounded-full">
+                            {item.icon}
+                          </div>
+                          <span className="text-sm font-medium">{item.text}</span>
                         </div>
-                        <span className="text-sm font-medium">{item.text}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-gray-400" />
-                    </Link>
-                  ))}
+                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                      </Link>
+                    ))}
                   </div>
                 </Card>
               </div>

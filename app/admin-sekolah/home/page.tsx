@@ -411,7 +411,7 @@ const RecentReports = ({ reports, onUpdateStatus }) => {
 };
 
 // Main Dashboard Component
-export default function ModernDashboard() {
+export default function Dashboard() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [stats, setStats] = useState({
     totalStudents: 0,
