@@ -26,12 +26,6 @@ const navItems: NavItem[] = [
     icon: ClipboardList,
   },
   {
-    id: "distribusi",
-    label: "Distribusi",
-    href: "/admin-sekolah/distribusi",
-    icon: PillIcon,
-  },
-  {
     id: "profil",
     label: "Profil",
     href: "/admin-sekolah/profil",
