@@ -2,8 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Camera, CameraOff, RefreshCw, Image as ImageIcon, X } from 'lucide-react';
+import { Camera, CameraOff, RefreshCw, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 

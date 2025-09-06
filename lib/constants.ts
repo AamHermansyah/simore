@@ -1,9 +1,7 @@
 import {
   RiPieChartLine,
   RiTrophyLine,
-  RiUserLine,
   RiTeamLine,
-  RiSettings3Line,
   RiSchoolLine,
   RiHealthBookLine,
   RiHistoryLine,
@@ -12,7 +10,9 @@ import {
   RiHospitalLine,
   RiBarChart2Line,
   RiLock2Line,
+  RiProfileLine,
 } from "@remixicon/react";
+import { Building } from "lucide-react";
 
 export const navigations = [
   {
@@ -22,7 +22,6 @@ export const navigations = [
         title: "Ringkasan",
         url: "/siswi",
         icon: RiPieChartLine,
-        isActive: true,
       },
       {
         title: "Laporan Baru",
@@ -40,9 +39,9 @@ export const navigations = [
         icon: RiTrophyLine,
       },
       {
-        title: "Keamanan",
-        url: "#",
-        icon: RiLock2Line,
+        title: "Profil",
+        url: "/siswi/profil",
+        icon: RiProfileLine,
       },
     ],
   },
@@ -110,9 +109,9 @@ export const navigations = [
         icon: RiBarChart2Line,
       },
       {
-        title: "Pengaturan",
-        url: "#",
-        icon: RiSettings3Line,
+        title: "Profil",
+        url: "/sekolah/profil",
+        icon: Building,
       },
     ],
   },

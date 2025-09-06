@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Trophy, Medal, Crown, Star, Award, Zap } from 'lucide-react';
+import { Crown, Star, Zap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Select,

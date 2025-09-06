@@ -27,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {navigations.map((item) => (
+        {navigations.map((item, index) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel className="uppercase text-muted-foreground/60">
               {item.title}
@@ -39,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuButton
                       asChild
                       className="group/menu-button font-medium gap-3 h-9 rounded-md hover:bg-primary hover:text-primary-foreground data-[active=true]:bg-secondary data-[active=true]:text-secondary-foreground [&>svg]:size-auto"
-                      isActive={item.isActive}
+                      isActive={index === 0}
                     >
                       <Link href={item.url}>
                         {item.icon && (
