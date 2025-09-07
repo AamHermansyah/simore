@@ -34,12 +34,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupLabel>
             <SidebarGroupContent className="px-2">
               <SidebarMenu>
-                {item.items.map((item) => (
+                {item.items.map((item, i) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
                       className="group/menu-button font-medium gap-3 h-9 rounded-md hover:bg-primary hover:text-primary-foreground data-[active=true]:bg-secondary data-[active=true]:text-secondary-foreground [&>svg]:size-auto"
-                      isActive={index === 0}
+                      isActive={index === 0 && i === 0}
                     >
                       <Link href={item.url}>
                         {item.icon && (

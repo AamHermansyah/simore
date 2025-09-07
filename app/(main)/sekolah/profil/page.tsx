@@ -193,7 +193,7 @@ const SchoolProfilePage = () => {
                   />
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
-                    <School className="h-4 w-4 text-gray-400" />
+                    <School className="h-4 w-4 text-muted-foreground" />
                     <span>{schoolData.name}</span>
                   </div>
                 )}
@@ -211,7 +211,7 @@ const SchoolProfilePage = () => {
                   />
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
-                    <Mail className="h-4 w-4 text-gray-400" />
+                    <Mail className="h-4 w-4 text-muted-foreground" />
                     <span>{schoolData.email}</span>
                   </div>
                 )}
@@ -229,7 +229,7 @@ const SchoolProfilePage = () => {
                   />
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
-                    <Phone className="h-4 w-4 text-gray-400" />
+                    <Phone className="h-4 w-4 text-muted-foreground" />
                     <span>{schoolData.phone}</span>
                   </div>
                 )}
@@ -247,7 +247,7 @@ const SchoolProfilePage = () => {
                   />
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
-                    <Globe className="h-4 w-4 text-gray-400" />
+                    <Globe className="h-4 w-4 text-muted-foreground" />
                     <a href={schoolData.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">
                       {schoolData.website}
                     </a>
@@ -267,7 +267,7 @@ const SchoolProfilePage = () => {
                   />
                 ) : (
                   <div className="flex items-start space-x-2 text-sm">
-                    <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                     <span>{schoolData.address}</span>
                   </div>
                 )}
@@ -297,7 +297,7 @@ const SchoolProfilePage = () => {
                     />
                   ) : (
                     <div className="flex items-center space-x-2 text-sm">
-                      <User className="h-4 w-4 text-gray-400" />
+                      <User className="h-4 w-4 text-muted-foreground" />
                       <span>{schoolData.principalName}</span>
                     </div>
                   )}
@@ -314,7 +314,7 @@ const SchoolProfilePage = () => {
                     />
                   ) : (
                     <div className="flex items-center space-x-2 text-sm">
-                      <Phone className="h-4 w-4 text-gray-400" />
+                      <Phone className="h-4 w-4 text-muted-foreground" />
                       <span>{schoolData.principalPhone}</span>
                     </div>
                   )}
@@ -340,7 +340,7 @@ const SchoolProfilePage = () => {
                     />
                   ) : (
                     <div className="flex items-center space-x-2 text-sm">
-                      <User className="h-4 w-4 text-gray-400" />
+                      <User className="h-4 w-4 text-muted-foreground" />
                       <span>{schoolData.coordinatorName}</span>
                     </div>
                   )}
@@ -357,7 +357,7 @@ const SchoolProfilePage = () => {
                     />
                   ) : (
                     <div className="flex items-center space-x-2 text-sm">
-                      <Phone className="h-4 w-4 text-gray-400" />
+                      <Phone className="h-4 w-4 text-muted-foreground" />
                       <span>{schoolData.coordinatorPhone}</span>
                     </div>
                   )}
@@ -373,7 +373,7 @@ const SchoolProfilePage = () => {
               <Separator className="my-2" />
               <div className="space-y-4 pt-2">
                 <div className="text-sm flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-gray-400" />
+                  <Clock className="h-4 w-4 text-muted-foreground" />
                   <span>Bergabung sejak: {formatDate(schoolData.joinDate)}</span>
                 </div>
 

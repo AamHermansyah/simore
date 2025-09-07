@@ -65,13 +65,13 @@ export const navigations = [
       },
       {
         title: "Papan Skor",
-        url: "#",
+        url: "/siswi/peringkat",
         icon: RiTrophyLine,
       },
       {
-        title: "Keamanan",
-        url: "#",
-        icon: RiLock2Line,
+        title: "Profil",
+        url: "/guru/profil",
+        icon: RiProfileLine,
       },
     ],
   },
@@ -85,22 +85,22 @@ export const navigations = [
       },
       {
         title: "Kelas",
-        url: "#",
+        url: "/sekolah/kelas",
         icon: RiDoorLine,
       },
       {
         title: "Guru Pengurus",
-        url: "#",
+        url: "/sekolah/guru",
         icon: RiAdminLine,
       },
       {
         title: "Siswi",
-        url: "#",
+        url: "/sekolah/siswi",
         icon: RiTeamLine,
       },
       {
         title: "Papan Skor",
-        url: "#",
+        url: "/siswi/peringkat",
         icon: RiTrophyLine,
       },
       {
@@ -145,12 +145,12 @@ export const navigations = [
       },
       {
         title: "Sekolah",
-        url: "#",
+        url: "/admin/sekolah",
         icon: RiSchoolLine,
       },
       {
         title: "Puskesmas",
-        url: "#",
+        url: "/admin/puskesmas",
         icon: RiHospitalLine,
       },
       {

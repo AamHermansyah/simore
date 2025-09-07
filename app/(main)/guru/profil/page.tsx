@@ -9,17 +9,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/alert-dialog"
 import {
   User,
   Calendar,
@@ -31,52 +21,60 @@ import {
   Save,
   X,
   Lock,
-  Award,
-  TrendingUp,
   Clock,
-  Target,
-  Zap
+  Users,
+  BookOpen,
+  CheckCircle,
+  GraduationCap,
+  UserCheck
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { PasswordInput } from '@/components/core/password-input';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
-const StudentProfilePage = () => {
+const TeacherProfilePage = () => {
   // State untuk edit mode
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   // Sample data - dalam implementasi sebenarnya dari API
-  const [studentData, setStudentData] = useState({
+  const [teacherData, setTeacherData] = useState({
     id: 1,
-    name: 'Siti Aminah',
-    nis: '2024001',
-    class: '10A',
-    email: 'siti.aminah@school.edu',
+    name: 'Sari Dewi Lestari, S.Pd',
+    nip: '198503152010012001',
+    position: 'Guru BK',
+    subject: 'Bimbingan Konseling',
+    email: 'sari.dewi@school.edu',
     phone: '081234567890',
-    address: 'Jl. Merdeka No. 123, Tasikmalaya',
-    birthDate: '2008-05-15',
-    bloodType: 'O+',
-    parentName: 'Budi Santoso',
-    parentPhone: '081987654321',
-    totalXP: 2450,
-    currentStreak: 12,
-    longestStreak: 18,
-    completionRate: 92,
-    joinDate: '2024-01-15'
+    address: 'Jl. Pendidikan No. 45, Tasikmalaya',
+    birthDate: '1985-03-15',
+    education: 'S1 Psikologi Pendidikan',
+    university: 'Universitas Pendidikan Indonesia',
+    graduationYear: '2008',
+    joinDate: '2010-01-15',
+    // Data spesifik untuk monitoring tablet tambah darah
+    totalStudentsManaged: 125, // Total siswi yang diawasi
+    class: '1A', // Laporan mingguan selesai tahun ini
+    currentWeekReports: 98, // Persentase laporan minggu ini
+    totalReminders: 256, // Total reminder yang dikirim
+    responseRate: 94, // Tingkat respon siswi
+    teachingExperience: 14 // Tahun mengajar
   });
 
-  const [formData, setFormData] = useState({ ...studentData });
+  const [formData, setFormData] = useState({ ...teacherData });
 
   const handleEdit = () => {
     setIsEditing(true);
-    setFormData({ ...studentData });
+    setFormData({ ...teacherData });
   };
 
   const handleSave = () => {
     // Simulate API call
-    setStudentData({ ...formData });
+    setTeacherData({ ...formData });
     setIsEditing(false);
     // Show success message (bisa implement toast)
     alert('Profil berhasil diperbarui!');
@@ -84,7 +82,7 @@ const StudentProfilePage = () => {
 
   const handleCancel = () => {
     setIsEditing(false);
-    setFormData({ ...studentData });
+    setFormData({ ...teacherData });
   };
 
   const formatDate = (dateString: string) => {
@@ -101,43 +99,37 @@ const StudentProfilePage = () => {
         <CardContent>
           {/* Basic Info */}
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{studentData.name}</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{teacherData.name}</h1>
             <div className="flex items-center justify-center space-x-4 text-muted-foreground mb-4">
               <div className="flex items-center space-x-1">
                 <School className="h-4 w-4" />
-                <span>Kelas {studentData.class}</span>
+                <span>{teacherData.position}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <User className="h-4 w-4" />
-                <span>NIS: {studentData.nis}</span>
+                <span>NIP: {teacherData.nip}</span>
               </div>
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-4 text-center">
-              <Award className="h-6 w-6 text-emerald-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-emerald-700">{studentData.totalXP}</div>
-              <div className="text-sm text-emerald-600">Total XP</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-orange-50 to-red-100 rounded-2xl p-4 text-center">
-              <Zap className="h-6 w-6 text-orange-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-orange-700">{studentData.currentStreak}</div>
-              <div className="text-sm text-orange-600">Current Streak</div>
-            </div>
-
+          {/* Stats Cards - Khusus untuk monitoring tablet tambah darah */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-4 text-center">
-              <Target className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-blue-700">{studentData.completionRate}%</div>
-              <div className="text-sm text-blue-600">Completion Rate</div>
+              <Users className="h-6 w-6 text-blue-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-blue-700">{teacherData.totalStudentsManaged}</div>
+              <div className="text-sm text-blue-600">Siswi Diawasi</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-4 text-center">
+              <CheckCircle className="h-6 w-6 text-emerald-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-emerald-700">{teacherData.currentWeekReports}%</div>
+              <div className="text-sm text-emerald-600">Laporan Minggu Ini</div>
             </div>
 
             <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-4 text-center">
-              <TrendingUp className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-purple-700">{studentData.longestStreak}</div>
-              <div className="text-sm text-purple-600">Best Streak</div>
+              <BookOpen className="h-6 w-6 text-purple-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-purple-700">{teacherData.class}</div>
+              <div className="text-sm text-purple-600">Kelas Diawasi</div>
             </div>
           </div>
 
@@ -171,7 +163,7 @@ const StudentProfilePage = () => {
       </Card>
 
       {/* Detailed Information */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-6">
         {/* Personal Information */}
         <Card>
           <CardContent>
@@ -192,7 +184,7 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{studentData.email}</span>
+                    <span>{teacherData.email}</span>
                   </div>
                 )}
               </div>
@@ -211,7 +203,7 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{studentData.phone}</span>
+                    <span>{teacherData.phone}</span>
                   </div>
                 )}
               </div>
@@ -230,41 +222,26 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>{formatDate(studentData.birthDate)}</span>
+                    <span>{formatDate(teacherData.birthDate)}</span>
                   </div>
                 )}
               </div>
 
-              {/* Blood Type */}
+              {/* Subject/Position */}
               <div>
-                <Label className="mb-2 block">Golongan Darah</Label>
+                <Label className="mb-2 block">Mata Pelajaran/Bidang</Label>
                 {isEditing ? (
-                  <Select
-                    value={formData.bloodType}
-                    onValueChange={(val) =>
-                      setFormData({ ...formData, bloodType: val })
+                  <Input
+                    type="text"
+                    value={formData.subject}
+                    onChange={(e) =>
+                      setFormData({ ...formData, subject: e.target.value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih golongan darah" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="A+">A+</SelectItem>
-                      <SelectItem value="A-">A-</SelectItem>
-                      <SelectItem value="B+">B+</SelectItem>
-                      <SelectItem value="B-">B-</SelectItem>
-                      <SelectItem value="AB+">AB+</SelectItem>
-                      <SelectItem value="AB-">AB-</SelectItem>
-                      <SelectItem value="O+">O+</SelectItem>
-                      <SelectItem value="O-">O-</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
-                    <div className="w-5 h-5 bg-red-200 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">🩸</span>
-                    </div>
-                    <span>{studentData.bloodType}</span>
+                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                    <span>{teacherData.subject}</span>
                   </div>
                 )}
               </div>
@@ -283,7 +260,7 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-start space-x-2 text-sm">
                     <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                    <span>{studentData.address}</span>
+                    <span>{teacherData.address}</span>
                   </div>
                 )}
               </div>
@@ -291,48 +268,73 @@ const StudentProfilePage = () => {
           </CardContent>
         </Card>
 
-        {/* Parent Information & Security */}
+        {/* Professional Information & Security */}
         <div className="space-y-6">
-          {/* Parent Information */}
+          {/* Professional Information */}
           <Card>
             <CardContent>
-              <h2 className="font-semibold">Informasi Orang Tua</h2>
+              <h2 className="font-semibold">Informasi Profesional</h2>
               <Separator className="my-3" />
               <div className="space-y-4">
-                {/* Parent Name */}
+                {/* Education */}
                 <div>
-                  <Label className="mb-2 block">Nama Orang Tua</Label>
+                  <Label className="mb-2 block">
+                    Pendidikan Terakhir
+                  </Label>
                   {isEditing ? (
                     <Input
                       type="text"
-                      value={formData.parentName}
+                      value={formData.education}
                       onChange={(e) =>
-                        setFormData({ ...formData, parentName: e.target.value })
+                        setFormData({ ...formData, education: e.target.value })
                       }
                     />
                   ) : (
-                    <div className="flex items-center space-x-2 text-sm">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span>{studentData.parentName}</span>
+                    <div className="text-sm flex items-center space-x-2 text-gray-900">
+                      <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                      <span>{teacherData.education}</span>
                     </div>
                   )}
                 </div>
 
-                {/* Parent Phone */}
+                {/* University */}
                 <div>
-                  <Label className="mb-2 block">No. Telepon Orang Tua</Label>
+                  <Label className="mb-2 block">
+                    Universitas
+                  </Label>
                   {isEditing ? (
                     <Input
-                      type="tel"
-                      value={formData.parentPhone}
+                      type="text"
+                      value={formData.university}
                       onChange={(e) =>
-                        setFormData({ ...formData, parentPhone: e.target.value })
+                        setFormData({ ...formData, university: e.target.value })
                       }
                     />
                   ) : (
-                    <div className="flex items-center space-x-2 text-sm">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span>{studentData.parentPhone}</span>
+                    <div className="text-sm flex items-center space-x-2 text-gray-900">
+                      <School className="h-4 w-4 text-muted-foreground" />
+                      <span>{teacherData.university}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Graduation Year */}
+                <div>
+                  <Label className="mb-2 block">
+                    Tahun Lulus
+                  </Label>
+                  {isEditing ? (
+                    <Input
+                      type="number"
+                      value={formData.graduationYear}
+                      onChange={(e) =>
+                        setFormData({ ...formData, graduationYear: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <div className="text-sm flex items-center space-x-2 text-gray-900">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span>{teacherData.graduationYear}</span>
                     </div>
                   )}
                 </div>
@@ -346,9 +348,14 @@ const StudentProfilePage = () => {
               <h2 className="font-semibold">Informasi Akun</h2>
               <Separator className="my-3" />
               <div className="space-y-4">
-                <div className="flex items-center space-x-2 text-sm">
+                <div className="text-sm flex items-center space-x-2 text-gray-900">
                   <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span>Bergabung sejak: {formatDate(studentData.joinDate)}</span>
+                  <span>Bergabung sejak: {formatDate(teacherData.joinDate)}</span>
+                </div>
+
+                <div className="text-sm flex items-center space-x-2 text-gray-900">
+                  <UserCheck className="h-4 w-4 text-muted-foreground" />
+                  <span>Pengalaman mengajar: {teacherData.teachingExperience} tahun</span>
                 </div>
 
                 {/* Change Password Button */}
@@ -396,4 +403,4 @@ const StudentProfilePage = () => {
   );
 };
 
-export default StudentProfilePage;
+export default TeacherProfilePage;
