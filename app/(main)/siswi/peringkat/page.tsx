@@ -31,12 +31,12 @@ const generateLeaderboardData = () => {
 };
 
 const LeaderboardSiswi = () => {
-  const [selectedClass, setSelectedClass] = useState('Semua Kelas');
+  const [selectedClass, setSelectedClass] = useState('Semua Angkatan');
 
   const leaderboardData = generateLeaderboardData();
-  const classes = ['Semua Kelas', '10A', '10B', '10C', '11A', '11B', '11C'];
+  const classes = ['Semua Angkatan', '10A', '10B', '10C', '11A', '11B', '11C'];
 
-  const filteredData = selectedClass === 'Semua Kelas'
+  const filteredData = selectedClass === 'Semua Angkatan'
     ? leaderboardData
     : leaderboardData.filter(student => student.class === selectedClass);
 
@@ -67,8 +67,8 @@ const LeaderboardSiswi = () => {
   return (
     <div className="space-y-6">
       <Select value={selectedClass} onValueChange={setSelectedClass}>
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Pilih kelas" />
+        <SelectTrigger className="w-42">
+          <SelectValue placeholder="Pilih angkatan" />
         </SelectTrigger>
         <SelectContent>
           {classes.map((className) => (

@@ -26,7 +26,6 @@ import {
   BookOpen,
   CheckCircle,
   GraduationCap,
-  UserCheck
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +46,6 @@ const TeacherProfilePage = () => {
     name: 'Sari Dewi Lestari, S.Pd',
     nip: '198503152010012001',
     position: 'Guru BK',
-    subject: 'Bimbingan Konseling',
     email: 'sari.dewi@school.edu',
     phone: '081234567890',
     address: 'Jl. Pendidikan No. 45, Tasikmalaya',
@@ -58,7 +56,7 @@ const TeacherProfilePage = () => {
     joinDate: '2010-01-15',
     // Data spesifik untuk monitoring tablet tambah darah
     totalStudentsManaged: 125, // Total siswi yang diawasi
-    class: '1A', // Laporan mingguan selesai tahun ini
+    class: '2022/2023', // Laporan mingguan selesai tahun ini
     currentWeekReports: 98, // Persentase laporan minggu ini
     totalReminders: 256, // Total reminder yang dikirim
     responseRate: 94, // Tingkat respon siswi
@@ -129,7 +127,7 @@ const TeacherProfilePage = () => {
             <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-4 text-center">
               <BookOpen className="h-6 w-6 text-purple-600 mx-auto mb-2" />
               <div className="text-2xl font-bold text-purple-700">{teacherData.class}</div>
-              <div className="text-sm text-purple-600">Kelas Diawasi</div>
+              <div className="text-sm text-purple-600">Angkatan Diawasi</div>
             </div>
           </div>
 
@@ -223,25 +221,6 @@ const TeacherProfilePage = () => {
                   <div className="flex items-center space-x-2 text-sm">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span>{formatDate(teacherData.birthDate)}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Subject/Position */}
-              <div>
-                <Label className="mb-2 block">Mata Pelajaran/Bidang</Label>
-                {isEditing ? (
-                  <Input
-                    type="text"
-                    value={formData.subject}
-                    onChange={(e) =>
-                      setFormData({ ...formData, subject: e.target.value })
-                    }
-                  />
-                ) : (
-                  <div className="flex items-center space-x-2 text-sm">
-                    <BookOpen className="h-4 w-4 text-muted-foreground" />
-                    <span>{teacherData.subject}</span>
                   </div>
                 )}
               </div>
@@ -351,11 +330,6 @@ const TeacherProfilePage = () => {
                 <div className="text-sm flex items-center space-x-2 text-gray-900">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span>Bergabung sejak: {formatDate(teacherData.joinDate)}</span>
-                </div>
-
-                <div className="text-sm flex items-center space-x-2 text-gray-900">
-                  <UserCheck className="h-4 w-4 text-muted-foreground" />
-                  <span>Pengalaman mengajar: {teacherData.teachingExperience} tahun</span>
                 </div>
 
                 {/* Change Password Button */}

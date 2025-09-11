@@ -14,77 +14,72 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  User,
-  Calendar,
+  Building2,
   MapPin,
   Phone,
   Mail,
-  School,
+  User,
   Edit3,
   Save,
   X,
   Lock,
-  Award,
-  TrendingUp,
   Clock,
   Target,
-  Zap
+  Users,
+  School,
+  BarChart3,
+  FileText
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { PasswordInput } from '@/components/core/password-input';
 
-const StudentProfilePage = () => {
+const PuskesmasProfilePage = () => {
   // State untuk edit mode
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   // Sample data - dalam implementasi sebenarnya dari API
-  const [studentData, setStudentData] = useState({
+  const [puskesmasData, setPuskesmasData] = useState({
     id: 1,
-    name: 'Siti Aminah',
-    nis: '2024001',
-    class: '2022/2023',
-    email: 'siti.aminah@school.edu',
-    phone: '081234567890',
-    address: 'Jl. Merdeka No. 123, Tasikmalaya',
-    birthDate: '2008-05-15',
-    bloodType: 'O+',
-    parentName: 'Budi Santoso',
-    parentPhone: '081987654321',
-    totalXP: 2450,
-    currentStreak: 12,
-    longestStreak: 18,
-    completionRate: 92,
-    joinDate: '2024-01-15'
+    name: 'Puskesmas Tasikmalaya Kota',
+    code: 'PSK001',
+    address: 'Jl. Sutisna Senjaya No. 15, Tasikmalaya, Jawa Barat 46116',
+    phone: '0265-331234',
+    email: 'puskesmas.tskmlykota@kemkes.go.id',
+    website: 'www.puskesmastasikmalaya.go.id',
+    kepala: 'dr. Andi Wijaya, M.Kes',
+    nip: '197805152008011003',
+    phoneKepala: '081234567890',
+    wilayahKerja: 'Kecamatan Tasikmalaya, Kecamatan Cihideung',
+    totalSekolah: 25,
+    totalSiswi: 2450,
+    tingkatKepatuhan: 89,
+    laporanBulanIni: 87,
+    kasusAnemia: 12,
+    siswiBelumLapor: 158,
+    establishedDate: '1995-08-17',
+    lastUpdate: '2024-09-09'
   });
 
-  const [formData, setFormData] = useState({ ...studentData });
+  const [formData, setFormData] = useState({ ...puskesmasData });
 
   const handleEdit = () => {
     setIsEditing(true);
-    setFormData({ ...studentData });
+    setFormData({ ...puskesmasData });
   };
 
   const handleSave = () => {
     // Simulate API call
-    setStudentData({ ...formData });
+    setPuskesmasData({ ...formData });
     setIsEditing(false);
-    // Show success message (bisa implement toast)
-    alert('Profil berhasil diperbarui!');
+    alert('Profil Puskesmas berhasil diperbarui!');
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setFormData({ ...studentData });
+    setFormData({ ...puskesmasData });
   };
 
   const formatDate = (dateString: string) => {
@@ -101,57 +96,24 @@ const StudentProfilePage = () => {
         <CardContent>
           {/* Basic Info */}
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{studentData.name}</h1>
-            <div className="flex items-center justify-center space-x-4 text-muted-foreground mb-4">
-              <div className="flex items-center space-x-1">
-                <School className="h-4 w-4" />
-                <span>Angkatan {studentData.class}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <User className="h-4 w-4" />
-                <span>NIS: {studentData.nis}</span>
-              </div>
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4 shadow-lg">
+              <Building2 className="h-10 w-10 text-white" />
             </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{puskesmasData.name}</h1>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 items-start gap-4 mb-6">
-            <div className="bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-4 text-center">
-              <Award className="h-6 w-6 text-emerald-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-emerald-700">{studentData.totalXP}</div>
-              <div className="text-sm text-emerald-600">Total XP</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-orange-50 to-red-100 rounded-2xl p-4 text-center">
-              <Zap className="h-6 w-6 text-orange-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-orange-700">{studentData.currentStreak}</div>
-              <div className="text-sm text-orange-600">Current Streak</div>
-            </div>
-
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-4 text-center">
-              <Target className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-blue-700">{studentData.completionRate}%</div>
-              <div className="text-sm text-blue-600">Tingkat Kepatuhan</div>
+              <School className="h-6 w-6 text-blue-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-blue-700">{puskesmasData.totalSekolah}</div>
+              <div className="text-sm text-blue-600">Sekolah</div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-4 text-center">
-              <TrendingUp className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-purple-700">{studentData.longestStreak}</div>
-              <div className="text-sm text-purple-600">Best Streak</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 items-start gap-4 mb-6">
-            <div className="bg-gradient-to-br from-red-50 to-yellow-100 rounded-2xl p-4 text-center">
-              <Award className="h-6 w-6 text-red-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-red-700">50</div>
-              <div className="text-sm text-red-600">Total Laporan</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-cyan-50 to-emerald-100 rounded-2xl p-4 text-center">
-              <Zap className="h-6 w-6 text-cyan-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-cyan-700">2</div>
-              <div className="text-sm text-cyan-600">Tidak Melapor</div>
+            <div className="bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-4 text-center">
+              <Users className="h-6 w-6 text-emerald-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-emerald-700">{puskesmasData.totalSiswi.toLocaleString()}</div>
+              <div className="text-sm text-emerald-600">Total Siswi</div>
             </div>
           </div>
 
@@ -185,16 +147,35 @@ const StudentProfilePage = () => {
       </Card>
 
       {/* Detailed Information */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Personal Information */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-6">
+        {/* Institution Information */}
         <Card>
           <CardContent>
-            <h2 className="font-semibold">Informasi Pribadi</h2>
+            <h2 className="font-semibold">Informasi Institusi</h2>
             <Separator className="my-3" />
             <div className="space-y-4">
+              {/* Name */}
+              <div>
+                <Label className="mb-2 block">Nama Puskesmas</Label>
+                {isEditing ? (
+                  <Input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
+                ) : (
+                  <div className="flex items-center space-x-2 text-sm">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <span>{puskesmasData.name}</span>
+                  </div>
+                )}
+              </div>
+
               {/* Email */}
               <div>
-                <Label className="mb-2 block">Email</Label>
+                <Label className="mb-2 block">Email Resmi</Label>
                 {isEditing ? (
                   <Input
                     type="email"
@@ -206,7 +187,7 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{studentData.email}</span>
+                    <span>{puskesmasData.email}</span>
                   </div>
                 )}
               </div>
@@ -225,60 +206,26 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{studentData.phone}</span>
+                    <span>{puskesmasData.phone}</span>
                   </div>
                 )}
               </div>
 
-              {/* Birth Date */}
+              {/* Website */}
               <div>
-                <Label className="mb-2 block">Tanggal Lahir</Label>
+                <Label className="mb-2 block">Website</Label>
                 {isEditing ? (
                   <Input
-                    type="date"
-                    value={formData.birthDate}
+                    type="url"
+                    value={formData.website}
                     onChange={(e) =>
-                      setFormData({ ...formData, birthDate: e.target.value })
+                      setFormData({ ...formData, website: e.target.value })
                     }
                   />
                 ) : (
                   <div className="flex items-center space-x-2 text-sm">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>{formatDate(studentData.birthDate)}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Blood Type */}
-              <div>
-                <Label className="mb-2 block">Golongan Darah</Label>
-                {isEditing ? (
-                  <Select
-                    value={formData.bloodType}
-                    onValueChange={(val) =>
-                      setFormData({ ...formData, bloodType: val })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih golongan darah" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="A+">A+</SelectItem>
-                      <SelectItem value="A-">A-</SelectItem>
-                      <SelectItem value="B+">B+</SelectItem>
-                      <SelectItem value="B-">B-</SelectItem>
-                      <SelectItem value="AB+">AB+</SelectItem>
-                      <SelectItem value="AB-">AB-</SelectItem>
-                      <SelectItem value="O+">O+</SelectItem>
-                      <SelectItem value="O-">O-</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <div className="flex items-center space-x-2 text-sm">
-                    <div className="w-5 h-5 bg-red-200 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">🩸</span>
-                    </div>
-                    <span>{studentData.bloodType}</span>
+                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-blue-600 hover:underline cursor-pointer">{puskesmasData.website}</span>
                   </div>
                 )}
               </div>
@@ -297,7 +244,26 @@ const StudentProfilePage = () => {
                 ) : (
                   <div className="flex items-start space-x-2 text-sm">
                     <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                    <span>{studentData.address}</span>
+                    <span>{puskesmasData.address}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Wilayah Kerja */}
+              <div>
+                <Label className="mb-2 block">Wilayah Kerja</Label>
+                {isEditing ? (
+                  <Textarea
+                    value={formData.wilayahKerja}
+                    onChange={(e) =>
+                      setFormData({ ...formData, wilayahKerja: e.target.value })
+                    }
+                    rows={2}
+                  />
+                ) : (
+                  <div className="flex items-start space-x-2 text-sm">
+                    <Target className="h-4 w-4 text-muted-foreground mt-0.5" />
+                    <span>{puskesmasData.wilayahKerja}</span>
                   </div>
                 )}
               </div>
@@ -305,48 +271,67 @@ const StudentProfilePage = () => {
           </CardContent>
         </Card>
 
-        {/* Parent Information & Security */}
+        {/* Leadership & System Information */}
         <div className="space-y-6">
-          {/* Parent Information */}
+          {/* Leadership Information */}
           <Card>
             <CardContent>
-              <h2 className="font-semibold">Informasi Orang Tua</h2>
+              <h2 className="font-semibold">Informasi Kepala Puskesmas</h2>
               <Separator className="my-3" />
               <div className="space-y-4">
-                {/* Parent Name */}
+                {/* Kepala Name */}
                 <div>
-                  <Label className="mb-2 block">Nama Orang Tua</Label>
+                  <Label className="mb-2 block">Nama Kepala Puskesmas</Label>
                   {isEditing ? (
                     <Input
                       type="text"
-                      value={formData.parentName}
+                      value={formData.kepala}
                       onChange={(e) =>
-                        setFormData({ ...formData, parentName: e.target.value })
+                        setFormData({ ...formData, kepala: e.target.value })
                       }
                     />
                   ) : (
                     <div className="flex items-center space-x-2 text-sm">
                       <User className="h-4 w-4 text-muted-foreground" />
-                      <span>{studentData.parentName}</span>
+                      <span>{puskesmasData.kepala}</span>
                     </div>
                   )}
                 </div>
 
-                {/* Parent Phone */}
+                {/* NIP */}
                 <div>
-                  <Label className="mb-2 block">No. Telepon Orang Tua</Label>
+                  <Label className="mb-2 block">NIP</Label>
+                  {isEditing ? (
+                    <Input
+                      type="text"
+                      value={formData.nip}
+                      onChange={(e) =>
+                        setFormData({ ...formData, nip: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <div className="flex items-center space-x-2 text-sm">
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                      <span>{puskesmasData.nip}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Kepala Phone */}
+                <div>
+                  <Label className="mb-2 block">No. Telepon Kepala</Label>
                   {isEditing ? (
                     <Input
                       type="tel"
-                      value={formData.parentPhone}
+                      value={formData.phoneKepala}
                       onChange={(e) =>
-                        setFormData({ ...formData, parentPhone: e.target.value })
+                        setFormData({ ...formData, phoneKepala: e.target.value })
                       }
                     />
                   ) : (
                     <div className="flex items-center space-x-2 text-sm">
                       <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span>{studentData.parentPhone}</span>
+                      <span>{puskesmasData.phoneKepala}</span>
                     </div>
                   )}
                 </div>
@@ -354,15 +339,15 @@ const StudentProfilePage = () => {
             </CardContent>
           </Card>
 
-          {/* Account Information */}
+          {/* System Information */}
           <Card>
             <CardContent>
-              <h2 className="font-semibold">Informasi Akun</h2>
+              <h2 className="font-semibold">Informasi Sistem</h2>
               <Separator className="my-3" />
               <div className="space-y-4">
-                <div className="flex items-center space-x-2 text-sm">
+                <div className="text-sm flex items-center space-x-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span>Bergabung sejak: {formatDate(studentData.joinDate)}</span>
+                  <span>Bergabung sejak: {formatDate(puskesmasData.lastUpdate)}</span>
                 </div>
 
                 {/* Change Password Button */}
@@ -386,7 +371,7 @@ const StudentProfilePage = () => {
               Ubah Password
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Silakan masukkan password saat ini dan password baru Anda.
+              Silakan masukkan password saat ini dan password baru untuk akun Puskesmas.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -410,4 +395,4 @@ const StudentProfilePage = () => {
   );
 };
 
-export default StudentProfilePage;
+export default PuskesmasProfilePage;

@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Siswi {
+  id               String   @id @default(uuid())
+  nama             String
+  status           Boolean  @default(true) // aktif atau nonaktif
+  poin             Int      @default(0)
+  nisn             String   @unique
+  nomorTelepon     String   @unique
+  email            String?
+  tanggalLahir     DateTime
+  jurusan          String?
+  alamat           String?
+  golonganDarah    String?
+  currentStreak    Int      @default(0)
+  bestStreak       Int      @default(0)
+  namaOrtu         String?
+  nomorTeleponOrtu String?
+  password         String
+  createdAt        DateTime @default(now())
+
+  // Relasi
+  angkatanId String?
+  angkatan   Angkatan? @relation(fields: [angkatanId], references: [id])
+
+  sekolahId String?
+  sekolah   Sekolah? @relation(fields: [sekolahId], references: [id])
+
+  laporan Laporan[]
+}
+
+model Guru {
+  id                 String   @id @default(uuid())
+  nama               String
+  status             Boolean  @default(true)
+  nip                String   @unique
+  posisi             String?
+  email              String   @unique
+  nomorTelepon       String?
+  tanggalLahir       DateTime
+  alamat             String?
+  pendidikanTerakhir String?
+  universitas        String?
+  tahunLulus         Int?
+  password           String
+  createdAt          DateTime @default(now())
+
+  sekolahId String?
+  sekolah   Sekolah?   @relation(fields: [sekolahId], references: [id])
+  Angkatan  Angkatan[]
+}
+
+model Angkatan {
+  id     String  @id @default(uuid())
+  nama   String
+  status Boolean @default(true)
+
+  // Relasi
+  guruId String?
+  guru   Guru?   @relation(fields: [guruId], references: [id])
+
+  sekolahId String?
+  sekolah   Sekolah? @relation(fields: [sekolahId], references: [id])
+
+  siswi Siswi[]
+}
+
+model Sekolah {
+  id                        String   @id @default(uuid())
+  nama                      String
+  nspn                      String   @unique
+  status                    Boolean  @default(true)
+  email                     String   @unique
+  wilayah                   String?
+  nomorTeleponSekolah       String?
+  website                   String?
+  alamatLengkap             String?
+  akreditasi                String?
+  namaKepalaSekolah         String?
+  nomorTeleponKepalaSekolah String?
+  namaKoordinator           String?
+  nomorTeleponKoordinator   String?
+  password                  String
+  createdAt                 DateTime @default(now())
+
+  // Relasi
+  siswi            Siswi[]
+  guru             Guru[]
+  angkatan         Angkatan[]
+  puskesmas        Puskesmas[]
+  PuskesmasSekolah PuskesmasSekolah[]
+}
+
+model Puskesmas {
+  id                          String   @id @default(uuid())
+  nama                        String
+  status                      Boolean  @default(true)
+  email                       String   @unique
+  nomorTelepon                String?
+  website                     String?
+  alamat                      String?
+  wilayahKerja                String?
+  namaKepalaPuskesmas         String?
+  nip                         String?  @unique
+  nomorTeleponKepalaPuskesmas String?
+  password                    String
+  createdAt                   DateTime @default(now())
+
+  // Relasi Many-to-Many ke Sekolah
+  sekolahs  PuskesmasSekolah[]
+  Sekolah   Sekolah?           @relation(fields: [sekolahId], references: [id])
+  sekolahId String?
+}
+
+model PuskesmasSekolah {
+  puskesmasId String
+  sekolahId   String
+
+  puskesmas Puskesmas @relation(fields: [puskesmasId], references: [id])
+  sekolah   Sekolah   @relation(fields: [sekolahId], references: [id])
+
+  @@id([puskesmasId, sekolahId])
+}
+
+model SuperAdmin {
+  id           String   @id @default(uuid())
+  nama         String
+  nip          String   @unique
+  email        String   @unique
+  nomorTelepon String?
+  alamat       String?
+  jabatan      String?
+  instansi     String?
+  password     String
+  createdAt    DateTime @default(now())
+}
+
+model Laporan {
+  id          String        @id @default(uuid())
+  buktiGambar String
+  status      StatusLaporan
+  catatanGuru String?
+  keluhan     String?
+  createdAt   DateTime      @default(now())
+
+  // Relasi
+  siswiId String
+  siswi   Siswi  @relation(fields: [siswiId], references: [id])
+}
+
+enum StatusLaporan {
+  DITOLAK
+  TERKIRIM
+  DIVERIFIKASI
+  TERLEWAT
+}

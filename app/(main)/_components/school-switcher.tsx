@@ -77,7 +77,7 @@ export function SchoolSwitcher() {
             <DropdownMenuLabel className="uppercase text-muted-foreground/60 text-xs">
               Sekolah
             </DropdownMenuLabel>
-            {schools.map((team, index) => (
+            {schools.map((team) => (
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => setActiveSchool(team)}

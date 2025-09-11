@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Ellipsis, Plus, Users } from "lucide-react";
 import SearchInput from "@/components/shared/search-input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 /**
  * ================================================
@@ -65,21 +66,21 @@ export default function ClassesPage() {
       <div className="w-full flex items-center justify-between gap-4">
         <SearchInput placeholder="Cari nama kelas atau wali kelas..." />
         <Button onClick={() => setOpenAdd(true)}>
-          <Plus className="h-4 w-4" /> Tambah Kelas
+          <Plus className="h-4 w-4" /> Tambah Angkatan
         </Button>
       </div>
 
       {/* Tabel Kelas */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Daftar Kelas</CardTitle>
+          <CardTitle className="text-base">Daftar Angkatan</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Kelas</TableHead>
-                <TableHead>Wali Kelas</TableHead>
+                <TableHead>Angkatan</TableHead>
+                <TableHead>Guru Pengelola</TableHead>
                 <TableHead>Jumlah Siswi</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
@@ -89,11 +90,7 @@ export default function ClassesPage() {
               {/* Row 1 */}
               <TableRow>
                 <TableCell>
-                  <div className="font-medium">XI IPA 1</div>
-                  <div className="mt-1 flex flex-wrap gap-1 text-xs">
-                    <Badge className="bg-[#fae27c] text-black">IPA</Badge>
-                    <Badge className="bg-[#c5eaf8] text-slate-900">2025/2026</Badge>
-                  </div>
+                  <div className="font-medium">2022/2023</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2 text-sm">
@@ -112,11 +109,7 @@ export default function ClassesPage() {
               {/* Row 2 */}
               <TableRow>
                 <TableCell>
-                  <div className="font-medium">XI IPS 2</div>
-                  <div className="mt-1 flex flex-wrap gap-1 text-xs">
-                    <Badge>IPS</Badge>
-                    <Badge className="bg-[#c5eaf8] text-slate-900">2025/2026</Badge>
-                  </div>
+                  <div className="font-medium">2022/2023</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2 text-sm">
@@ -135,11 +128,7 @@ export default function ClassesPage() {
               {/* Row 3 */}
               <TableRow>
                 <TableCell>
-                  <div className="font-medium">XII IPA 1</div>
-                  <div className="mt-1 flex flex-wrap gap-1 text-xs">
-                    <Badge className="bg-[#fae27c] text-black">IPA</Badge>
-                    <Badge className="bg-[#c5eaf8] text-slate-900">2025/2026</Badge>
-                  </div>
+                  <div className="font-medium">2022/2023</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2 text-sm">
@@ -159,30 +148,32 @@ export default function ClassesPage() {
         </CardContent>
       </Card>
 
-      {/* Alert Dialog: Tambah Kelas */}
+      {/* Alert Dialog: Tambah Angkatan */}
       <AlertDialog open={openAdd} onOpenChange={setOpenAdd}>
         <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle>Tambah Kelas</AlertDialogTitle>
-            <AlertDialogDescription>Isi data kelas untuk keperluan administrasi dan monitoring.</AlertDialogDescription>
+            <AlertDialogTitle>Tambah Angkatan</AlertDialogTitle>
+            <AlertDialogDescription>Isi data angkatan untuk keperluan administrasi dan monitoring.</AlertDialogDescription>
           </AlertDialogHeader>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2 grid gap-2">
-              <Label htmlFor="className">Nama Kelas</Label>
-              <Input id="className" placeholder="cth. XI IPA 1" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="major">Jurusan</Label>
-              <Input id="major" placeholder="cth. IPA / IPS" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="year">Tahun Ajaran</Label>
-              <Input id="year" placeholder="cth. 2025/2026" />
+              <Label htmlFor="className">Nama Angkatan</Label>
+              <Input id="className" placeholder="cth. 2022/2023" />
             </div>
             <div className="col-span-2 grid gap-2">
-              <Label htmlFor="homeroom">Guru Pengurus</Label>
-              <Input id="homeroom" placeholder="cth. Dwi Hartati, S.Pd" />
+              <Label htmlFor="homeroom">Guru Pengelola</Label>
+              <Select>
+                <SelectTrigger id="homeroom" className="w-full">
+                  <SelectValue placeholder="Pilih pengelola" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="dwi-hartati">Dwi Hartati, S.Pd</SelectItem>
+                  <SelectItem value="agus-santoso">Agus Santoso, M.Pd</SelectItem>
+                  <SelectItem value="siti-rahma">Siti Rahma, S.Pd</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+
             <div className="col-span-2 grid gap-2">
               <Label>Status</Label>
               <div className="flex items-center gap-4 text-sm">

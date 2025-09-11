@@ -51,6 +51,7 @@ import {
   Plus,
 } from "lucide-react";
 import SearchInput from "@/components/shared/search-input";
+import { PasswordInput } from "@/components/core/password-input";
 
 export default function StudentsPage() {
   const [openAdd, setOpenAdd] = useState(false);
@@ -64,46 +65,6 @@ export default function StudentsPage() {
             Tambah, ubah, pindahkan kelas, dan kelola status akun siswa.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <AlertDialog open={openAdd} onOpenChange={setOpenAdd}>
-            <AlertDialogContent className="sm:max-w-lg">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Tambah Akun Siswa</AlertDialogTitle>
-                <AlertDialogDescription>Isi data dasar siswa. Undangan bisa dikirim via Email/WA.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2 grid gap-2">
-                  <Label htmlFor="name">Nama Lengkap</Label>
-                  <Input id="name" placeholder="cth. Aulia Nur Rahma" />
-                </div>
-                <div className="grid gap-2 col-span-2">
-                  <Label htmlFor="nisn">NISN</Label>
-                  <Input id="nisn" placeholder="cth. 006xxxxxxx" />
-                </div>
-                <div className="col-span-2 grid gap-2">
-                  <Label>Kelas</Label>
-                  <div className="grid grid-cols-3 gap-2 text-sm">
-                    <label className="inline-flex items-center gap-2"><Input type="radio" name="kelas" className="h-4 w-4" defaultChecked /> XI IPA 1</label>
-                    <label className="inline-flex items-center gap-2"><Input type="radio" name="kelas" className="h-4 w-4" /> XI IPA 2</label>
-                    <label className="inline-flex items-center gap-2"><Input type="radio" name="kelas" className="h-4 w-4" /> XI IPS 1</label>
-                  </div>
-                </div>
-                <div className="grid gap-2 col-span-2">
-                  <Label htmlFor="phone">No. WA</Label>
-                  <Input id="phone" type="tel" placeholder="08xxxxxxxxxx" />
-                </div>
-                <div className="grid gap-2 col-span-2">
-                  <Label htmlFor="email">Email (opsional)</Label>
-                  <Input id="email" type="email" placeholder="siswa@sch.id" />
-                </div>
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Batal</AlertDialogCancel>
-                <AlertDialogAction>Tambah</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
       </div>
 
       {/* Filter bar */}
@@ -111,18 +72,17 @@ export default function StudentsPage() {
         <div className="flex items-center gap-2">
           <SearchInput placeholder="Cari nama atau NISN" />
           <Select defaultValue="all">
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-42">
               <SelectValue placeholder="Kelas" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Semua Kelas</SelectItem>
-              <SelectItem value="xi-ipa-1">XI IPA 1</SelectItem>
-              <SelectItem value="xi-ipa-2">XI IPA 2</SelectItem>
-              <SelectItem value="xi-ips-1">XI IPS 1</SelectItem>
+              <SelectItem value="all">Semua Angkatan</SelectItem>
+              <SelectItem value="2022/2023">2022/2023</SelectItem>
+              <SelectItem value="2023/2024">2023/2024</SelectItem>
             </SelectContent>
           </Select>
           <Select defaultValue="status-all">
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-38">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -147,7 +107,7 @@ export default function StudentsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Siswa</TableHead>
-                <TableHead>Kelas</TableHead>
+                <TableHead>Angkatan</TableHead>
                 <TableHead>Kontak</TableHead>
                 <TableHead>Terakhir Lapor</TableHead>
                 <TableHead>Status</TableHead>
@@ -159,10 +119,10 @@ export default function StudentsPage() {
               <TableRow>
                 <TableCell>
                   <div className="font-medium">Aulia Nur Rahma</div>
-                  <div className="text-xs text-slate-600">NISN 0061234567 • NIS 22.10.001</div>
+                  <div className="text-xs text-slate-600">NISN 0061234567</div>
                 </TableCell>
                 <TableCell>
-                  <Badge>XI IPA 1</Badge>
+                  <Badge>2022/2023</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3 text-sm">
@@ -181,10 +141,10 @@ export default function StudentsPage() {
               <TableRow>
                 <TableCell>
                   <div className="font-medium">Della Pratiwi</div>
-                  <div className="text-xs text-slate-600">NISN 0067654321 • NIS 22.10.045</div>
+                  <div className="text-xs text-slate-600">NISN 0067654321</div>
                 </TableCell>
                 <TableCell>
-                  <Badge>XI IPA 2</Badge>
+                  <Badge>2022/2023</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3 text-sm">
@@ -203,10 +163,10 @@ export default function StudentsPage() {
               <TableRow>
                 <TableCell>
                   <div className="font-medium">Rani Saputri</div>
-                  <div className="text-xs text-slate-600">NISN 0061122334 • NIS 22.10.087</div>
+                  <div className="text-xs text-slate-600">NISN 0061122334</div>
                 </TableCell>
                 <TableCell>
-                  <Badge>XI IPS 1</Badge>
+                  <Badge>2022/2023</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3 text-sm">
@@ -223,6 +183,52 @@ export default function StudentsPage() {
           </Table>
         </CardContent>
       </Card>
+
+      <AlertDialog open={openAdd} onOpenChange={setOpenAdd}>
+        <AlertDialogContent className="sm:max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tambah Akun Siswa</AlertDialogTitle>
+            <AlertDialogDescription>Isi data dasar siswa untuk gabung kedalam program simore.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2 grid gap-2">
+              <Label htmlFor="name">Nama Lengkap</Label>
+              <Input id="name" placeholder="cth. Aulia Nur Rahma" />
+            </div>
+            <div className="grid gap-2 col-span-2">
+              <Label htmlFor="nisn">NISN</Label>
+              <Input id="nisn" placeholder="cth. 006xxxxxxx" />
+            </div>
+
+            <div className="col-span-2 grid gap-2">
+              <Label htmlFor="angkatan">Angkatan</Label>
+              <Select>
+                <SelectTrigger id="angkatan" className="w-full">
+                  <SelectValue placeholder="Pilih angkatan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="2022-2023">2022/2023</SelectItem>
+                  <SelectItem value="2023-2024">2023/2024</SelectItem>
+                  <SelectItem value="2024-2025">2024/2025</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2 col-span-2">
+              <Label htmlFor="phone">No. WA</Label>
+              <Input id="phone" type="tel" placeholder="08xxxxxxxxxx" />
+            </div>
+            <div className="grid gap-2 col-span-2">
+              <Label htmlFor="password">Password</Label>
+              <PasswordInput id="password" placeholder="Masukan password" />
+            </div>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction>Tambah</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -5,18 +5,30 @@ import {
   RiSchoolLine,
   RiHealthBookLine,
   RiHistoryLine,
-  RiDoorLine,
   RiAdminLine,
   RiHospitalLine,
   RiBarChart2Line,
-  RiLock2Line,
   RiProfileLine,
+  RiGraduationCapLine,
 } from "@remixicon/react";
-import { Building } from "lucide-react";
+import {
+  BarChart3,
+  Building,
+  Building2,
+  CheckCircle,
+  GraduationCap,
+  School,
+  Shield,
+  TrendingUp,
+  User,
+  Users
+} from "lucide-react";
+import { NavigationGroup } from "./types";
 
-export const navigations = [
+export const navigations: NavigationGroup[] = [
   {
     title: "Siswi",
+    role: 'SISWI',
     items: [
       {
         title: "Ringkasan",
@@ -47,6 +59,7 @@ export const navigations = [
   },
   {
     title: "Guru",
+    role: 'GURU',
     items: [
       {
         title: "Ringkasan",
@@ -77,6 +90,7 @@ export const navigations = [
   },
   {
     title: "Sekolah",
+    role: 'SEKOLAH',
     items: [
       {
         title: "Ringkasan",
@@ -84,12 +98,12 @@ export const navigations = [
         icon: RiPieChartLine,
       },
       {
-        title: "Kelas",
-        url: "/sekolah/kelas",
-        icon: RiDoorLine,
+        title: "Angkatan",
+        url: "/sekolah/angkatan",
+        icon: RiGraduationCapLine,
       },
       {
-        title: "Guru Pengurus",
+        title: "Guru Pengelola",
         url: "/sekolah/guru",
         icon: RiAdminLine,
       },
@@ -117,6 +131,7 @@ export const navigations = [
   },
   {
     title: "Puskesmas",
+    role: 'PUSKESMAS',
     items: [
       {
         title: "Siswi",
@@ -129,14 +144,15 @@ export const navigations = [
         icon: RiBarChart2Line,
       },
       {
-        title: "Keamanan",
-        url: "#",
-        icon: RiLock2Line,
+        title: "Profil",
+        url: "/puskesmas/profil",
+        icon: Building,
       },
     ],
   },
   {
     title: "Super Admin",
+    role: 'SUPERADMIN',
     items: [
       {
         title: "Ringkasan",
@@ -154,10 +170,112 @@ export const navigations = [
         icon: RiHospitalLine,
       },
       {
-        title: "Keamanan",
-        url: "#",
-        icon: RiLock2Line,
+        title: "Profil",
+        url: "/admin/profil",
+        icon: RiProfileLine,
       },
     ],
   },
 ]
+
+export const features = [
+  {
+    icon: CheckCircle,
+    title: 'Laporan Mudah',
+    description: 'Sistem pelaporan yang sederhana dan user-friendly untuk siswi'
+  },
+  {
+    icon: BarChart3,
+    title: 'Monitoring Real-time',
+    description: 'Pantau konsumsi tablet tambah darah secara real-time'
+  },
+  {
+    icon: Users,
+    title: 'Multi-Role Access',
+    description: 'Akses berbeda untuk siswa, guru, sekolah, dan puskesmas'
+  },
+  {
+    icon: TrendingUp,
+    title: 'Analytics Lengkap',
+    description: 'Dashboard analytics untuk monitoring kesehatan siswi'
+  }
+];
+
+export const roles = [
+  {
+    value: 'SISWI',
+    label: 'Siswi',
+    icon: User,
+    color: 'emerald',
+    description: 'Laporan konsumsi tablet tambah darah'
+  },
+  {
+    value: 'GURU',
+    label: 'Guru',
+    icon: GraduationCap,
+    color: 'blue',
+    description: 'Monitoring siswi dalam satu angkatan'
+  },
+  {
+    value: 'SEKOLAH',
+    label: 'Sekolah',
+    icon: School,
+    color: 'orange',
+    description: 'Kelola data guru dan siswa'
+  },
+  {
+    value: 'PUSKESMAS',
+    label: 'Puskesmas',
+    icon: Building2,
+    color: 'purple',
+    description: 'Monitoring seluruh sekolah'
+  },
+  {
+    value: 'SUPERADMIN',
+    label: 'Super Admin',
+    icon: Shield,
+    color: 'red',
+    description: 'Kelola akun sekolah & puskesmas'
+  }
+];
+
+export const getColorClasses = (color: string) => {
+  const colors = {
+    emerald: {
+      bg: 'from-emerald-50 to-green-100',
+      text: 'text-emerald-700',
+      icon: 'text-emerald-600',
+      border: 'border-emerald-200 hover:border-emerald-300',
+      ring: 'ring-emerald-500'
+    },
+    blue: {
+      bg: 'from-blue-50 to-indigo-100',
+      text: 'text-blue-700',
+      icon: 'text-blue-600',
+      border: 'border-blue-200 hover:border-blue-300',
+      ring: 'ring-blue-500'
+    },
+    orange: {
+      bg: 'from-orange-50 to-red-100',
+      text: 'text-orange-700',
+      icon: 'text-orange-600',
+      border: 'border-orange-200 hover:border-orange-300',
+      ring: 'ring-orange-500'
+    },
+    purple: {
+      bg: 'from-purple-50 to-pink-100',
+      text: 'text-purple-700',
+      icon: 'text-purple-600',
+      border: 'border-purple-200 hover:border-purple-300',
+      ring: 'ring-purple-500'
+    },
+    red: {
+      bg: 'from-red-50 to-rose-100',
+      text: 'text-red-700',
+      icon: 'text-red-600',
+      border: 'border-red-200 hover:border-red-300',
+      ring: 'ring-red-500'
+    }
+  };
+  return colors[color as keyof typeof colors] || colors.emerald;
+};

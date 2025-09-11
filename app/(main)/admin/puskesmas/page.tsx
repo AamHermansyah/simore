@@ -47,6 +47,31 @@ import {
   Hospital,
 } from "lucide-react";
 import SearchInput from "@/components/shared/search-input";
+import { PasswordInput } from "@/components/core/password-input";
+import MultipleSelector, { Option } from "@/components/ui/multiselect";
+
+const sekolahOptions: Option[] = [
+  {
+    value: "sman1",
+    label: "SMA Negeri 1 Garut",
+  },
+  {
+    value: "sman2",
+    label: "SMA Negeri 2 Garut",
+  },
+  {
+    value: "sman3",
+    label: "SMA Negeri 3 Garut",
+  },
+  {
+    value: "sman21",
+    label: "SMAN 21 Garut",
+  },
+  {
+    value: "smp5",
+    label: "SMP Negeri 5 Garut",
+  },
+]
 
 export default function AdminPhcPage() {
   const [openAdd, setOpenAdd] = useState(false);
@@ -154,45 +179,31 @@ export default function AdminPhcPage() {
             <AlertDialogTitle>Tambah Akun Puskesmas</AlertDialogTitle>
             <AlertDialogDescription>Isi data institusi dan kontak utama admin puskesmas.</AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2 grid gap-2">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="grid gap-2">
               <Label htmlFor="phcName">Nama Puskesmas</Label>
               <Input id="phcName" placeholder="cth. Puskesmas Cempaka Putih" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="code">Kode Fasyankes</Label>
-              <Input id="code" placeholder="cth. 3171xxxx" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="province">Provinsi</Label>
-              <Input id="province" placeholder="cth. DKI Jakarta" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="city">Kota/Kabupaten</Label>
-              <Input id="city" placeholder="cth. Jakarta Pusat" />
-            </div>
-            <div className="col-span-2 grid gap-2">
-              <Label htmlFor="address">Alamat</Label>
-              <Input id="address" placeholder="Jln. Contoh No. 1" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email Admin</Label>
               <Input id="email" type="email" placeholder="admin@puskesmas.go.id" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="phone">No. WA Admin</Label>
-              <Input id="phone" type="tel" placeholder="08xxxxxxxxxx" />
+              <Label>Akses Sekolah</Label>
+              <MultipleSelector
+                commandProps={{
+                  label: "Pilih sekolah",
+                }}
+                value={[]}
+                defaultOptions={sekolahOptions}
+                placeholder="Pilih sekolah..."
+                hideClearAllButton
+                emptyIndicator={<p className="text-center text-sm">Tidak ada sekolah ditemukan</p>}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="schools">Sekolah Dibina (perkiraan)</Label>
-              <Input id="schools" type="number" min={0} placeholder="cth. 12" />
-            </div>
-            <div className="grid gap-2">
-              <Label>Status</Label>
-              <div className="flex items-center gap-4 text-sm">
-                <label className="inline-flex items-center gap-2"><Input type="radio" name="status" defaultChecked className="h-4 w-4" /> Aktif</label>
-                <label className="inline-flex items-center gap-2"><Input type="radio" name="status" className="h-4 w-4" /> Nonaktif</label>
-              </div>
+              <Label htmlFor="password">Password</Label>
+              <PasswordInput id="password" placeholder="Masukan password" />
             </div>
           </div>
           <AlertDialogFooter>

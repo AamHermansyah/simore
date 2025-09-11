@@ -69,9 +69,9 @@ export default function TeachersPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Guru</TableHead>
-                <TableHead>Kelas Diampu</TableHead>
+                <TableHead>Angkatan Dikelola</TableHead>
                 <TableHead>Kontak</TableHead>
-                <TableHead>Terakhir Login</TableHead>
+                <TableHead>Bergabung</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
@@ -84,10 +84,7 @@ export default function TeachersPage() {
                   <div className="text-xs text-slate-600">NIP 1987.07.12.2020.1.001</div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap gap-1 text-xs">
-                    <Badge className="bg-[#fae27c] text-black">XI IPA 1</Badge>
-                    <Badge className="bg-[#c5eaf8] text-slate-900">XI IPA 2</Badge>
-                  </div>
+                  <Badge variant="secondary">2022/2023</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3 text-sm">
@@ -111,10 +108,7 @@ export default function TeachersPage() {
                   <div className="text-xs text-slate-600">NIP 1986.02.10.2019.1.014</div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap gap-1 text-xs">
-                    <Badge>XI IPS 1</Badge>
-                    <Badge>XI IPS 2</Badge>
-                  </div>
+                  <Badge variant="secondary">2022/2023</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3 text-sm">
