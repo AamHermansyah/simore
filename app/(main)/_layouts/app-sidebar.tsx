@@ -21,6 +21,7 @@ import { RiLogoutBoxLine } from "@remixicon/react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { usePathname, useRouter } from "next/navigation";
 
 interface IProps extends React.ComponentProps<typeof Sidebar> {
   role: Roles;
@@ -28,6 +29,8 @@ interface IProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ role, ...props }: IProps) {
   const [loading, startServer] = useTransition();
+  const navigate = useRouter();
+  const pathname = usePathname();
 
   return (
     <Sidebar {...props}>
@@ -37,7 +40,7 @@ export function AppSidebar({ role, ...props }: IProps) {
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {navigations.map((item, index) => {
+        {navigations.map((item) => {
           if ((item.role !== undefined) && item.role === role) {
             return (
               <SidebarGroup key={item.title}>
@@ -46,12 +49,12 @@ export function AppSidebar({ role, ...props }: IProps) {
                 </SidebarGroupLabel>
                 <SidebarGroupContent className="px-2">
                   <SidebarMenu>
-                    {item.items.map((item, i) => (
+                    {item.items.map((item) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton
                           asChild
                           className="group/menu-button font-medium gap-3 h-9 rounded-md hover:bg-primary hover:text-primary-foreground data-[active=true]:bg-secondary data-[active=true]:text-secondary-foreground [&>svg]:size-auto"
-                          isActive={index === 0 && i === 0}
+                          isActive={(pathname === item.url) || (pathname.startsWith(item.url) && item.url.split('/').length > 2)}
                         >
                           <Link href={item.url}>
                             {item.icon && (
@@ -87,6 +90,7 @@ export function AppSidebar({ role, ...props }: IProps) {
                       .then(() => {
                         toast.dismiss(id);
                         toast.warning('Akun berhasil keluar');
+                        navigate.push('/login');
                       });
                   })
                 }

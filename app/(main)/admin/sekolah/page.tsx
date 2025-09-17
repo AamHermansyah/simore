@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,8 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -28,48 +26,94 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Ellipsis,
   Mail,
   Phone,
   Plus,
   Building2,
   MapPin,
+  LoaderCircle,
 } from "lucide-react";
 import SearchInput from "@/components/shared/search-input";
-
-/**
- * ================================================
- * SiMoRE — "/admin/schools" (CRUD Akun Sekolah — Super Admin)
- * ================================================
- * Desain-only; desktop-first; **disesuaikan dengan contoh** (header minimal, toolbar SearchInput + tombol Tambah,
- * table di dalam Card, status badge: Aktif (default), Nonaktif (secondary/abu-abu)).
- * Komponen: shadcn/ui + Tailwind + TS. Tambah Sekolah via AlertDialog.
- */
+import { SekolahAddEditForm } from "../_components/sekolah-add-edit-form";
+import { Sekolah } from "@/lib/generated/prisma";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios, { CancelTokenSource, isAxiosError } from "axios"
+import { toast } from "sonner";
+import { Pagination } from "@/components/ui/pagination";
 
 export default function AdminSchoolsPage() {
-  const [openAdd, setOpenAdd] = useState(false);
+  const [addEditDialog, setAddEditDialog] = useState(false);
+  const [data, setData] = useState<Sekolah[]>([]);
+  const [selectedSekolah, setSelectedSekolah] = useState<Sekolah | null>(null);
+  const [typeAction, setTypeAction] = useState<'add' | 'edit'>('add');
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 0,
+    limit: 10,
+    totalPages: 0,
+  });
+
+  const searchParams = useSearchParams();
+  const q = searchParams.get('q') || '';
+  const page = searchParams.get('page') || '1';
+  const navigate = useRouter();
+  const cancelTokenSource = useRef<CancelTokenSource | null>(null);
+
+  const fetch = useCallback((keyword: string, page: string) => {
+    if (cancelTokenSource.current) {
+      cancelTokenSource.current.cancel('Operation canceled due to new request.');
+    }
+
+    const source = axios.CancelToken.source();
+    cancelTokenSource.current = source;
+
+    setLoading(true);
+
+    axios
+      .get(`/api/sekolah`, {
+        params: {
+          q: keyword,
+          limit: pagination.limit || 10,
+          page: typeof page === 'string' && !isNaN(+page) ? +page : 1
+        },
+        cancelToken: source.token,
+      })
+      .then((res) => {
+        const { items, ...pagination } = res.data
+        setData(items);
+        setPagination(pagination);
+        setLoading(false)
+      })
+      .catch((error) => {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          setData([]);
+          setLoading(false)
+          if (isAxiosError(error)) {
+            toast.error(JSON.stringify(error.response?.data) || error.message);
+          } else {
+            toast.error(error.message || 'Internal Error');
+          }
+        }
+      });
+  }, []);
+
+  const handleSearch = (value: string) => {
+    value = value.trim();
+    if (q !== value) {
+      navigate.replace(`?q=${value}`);
+    }
+  }
+
+  useEffect(() => {
+    fetch(q, page);
+  }, [q, page]);
 
   return (
     <div className="space-y-4">
-      {/* Header minimal (sesuai contoh) */}
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold">Kelola Akun Sekolah</h1>
         <p className="text-sm text-muted-foreground">
@@ -77,15 +121,17 @@ export default function AdminSchoolsPage() {
         </p>
       </div>
 
-      {/* Toolbar: SearchInput + Tambah (tanpa filter kompleks) */}
       <div className="w-full flex items-center justify-between gap-4">
-        <SearchInput placeholder="Cari nama sekolah / NPSN / daerah..." />
-        <Button onClick={() => setOpenAdd(true)}>
-          <Plus className="h-4 w-4" /> Tambah Sekolah
+        <SearchInput
+          defaultValue={q}
+          placeholder="Cari nama sekolah atau NPSN"
+          onChange={handleSearch}
+        />
+        <Button onClick={() => setAddEditDialog(true)}>
+          <Plus className="h-4 w-4" /> Tambah
         </Button>
       </div>
 
-      {/* Tabel Sekolah (di dalam Card, sesuai pola contoh) */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Daftar Sekolah</CardTitle>
@@ -103,137 +149,119 @@ export default function AdminSchoolsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* Row 1 */}
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium inline-flex items-center gap-2"><Building2 className="h-4 w-4" /> SMA Negeri 3 Tasikmalaya</div>
-                </TableCell>
-                <TableCell>20231234</TableCell>
-                <TableCell className="text-sm inline-flex items-center gap-2"><MapPin className="h-3.5 w-3.5" /> Tasikmalaya, Jawa Barat</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="inline-flex items-center gap-1 text-slate-700"><Mail className="h-3.5 w-3.5" /> admin@sman3.sch.id</span>
-                    <span className="inline-flex items-center gap-1 text-slate-700"><Phone className="h-3.5 w-3.5" /> 0265-xxxxxxx</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {/* Status badge: Aktif (default), Nonaktif (secondary gray) */}
-                  <Badge>Aktif</Badge>
-                </TableCell>
-                <TableCell className="text-right"><RowActions /></TableCell>
-              </TableRow>
-
-              {/* Row 2 */}
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium inline-flex items-center gap-2"><Building2 className="h-4 w-4" /> SMK Negeri 63 Jakarta</div>
-                </TableCell>
-                <TableCell>20194567</TableCell>
-                <TableCell className="text-sm inline-flex items-center gap-2"><MapPin className="h-3.5 w-3.5" /> Jakarta Selatan, DKI Jakarta</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="inline-flex items-center gap-1 text-slate-700"><Mail className="h-3.5 w-3.5" /> admin@smkn63.sch.id</span>
-                    <span className="inline-flex items-center gap-1 text-slate-700"><Phone className="h-3.5 w-3.5" /> 021-xxxxxxx</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="secondary" className="bg-slate-200 text-slate-800">Nonaktif</Badge>
-                </TableCell>
-                <TableCell className="text-right"><RowActions /></TableCell>
-              </TableRow>
-
-              {/* Row 3 */}
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium inline-flex items-center gap-2"><Building2 className="h-4 w-4" /> SMA Negeri 1 Bandung</div>
-                </TableCell>
-                <TableCell>20181234</TableCell>
-                <TableCell className="text-sm inline-flex items-center gap-2"><MapPin className="h-3.5 w-3.5" /> Bandung, Jawa Barat</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="inline-flex items-center gap-1 text-slate-700"><Mail className="h-3.5 w-3.5" /> admin@sman1.sch.id</span>
-                    <span className="inline-flex items-center gap-1 text-slate-700"><Phone className="h-3.5 w-3.5" /> 022-xxxxxxx</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge>Aktif</Badge>
-                </TableCell>
-                <TableCell className="text-right"><RowActions /></TableCell>
-              </TableRow>
+              {!loading ? (
+                <>
+                  {data.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-8">
+                        {q.length > 0 ? "Data tidak ditemukan" : "Belum ada data sekolah"}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    data.map((sekolah) => (
+                      <TableRow key={sekolah.id}>
+                        <TableCell>
+                          <div className="font-medium inline-flex items-center gap-2">
+                            <Building2 className="h-4 w-4" /> {sekolah.nama}
+                          </div>
+                        </TableCell>
+                        <TableCell>{sekolah.nspn}</TableCell>
+                        <TableCell>
+                          <div className="text-sm inline-flex items-center gap-2">
+                            <MapPin className="h-3.5 w-3.5" /> {sekolah.wilayah || '-'}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3 text-sm">
+                            <span className="inline-flex items-center gap-1 text-muted-foreground">
+                              <Mail className="h-3.5 w-3.5" /> {sekolah.email}
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-muted-foreground">
+                              <Phone className="h-3.5 w-3.5" /> {sekolah.nomorTeleponSekolah || '-'}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={sekolah.status ? 'default' : 'outline'}>
+                            {sekolah.status ? 'Aktif' : 'Nonaktif'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Ellipsis className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>Lihat profil</DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setTypeAction('edit');
+                                  setSelectedSekolah(sekolah);
+                                  setAddEditDialog(true);
+                                }}
+                              >
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-destructive">
+                                Nonaktifkan
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </>
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <LoaderCircle className="size-5 mx-auto animate-spin" />
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
+
+          {pagination.totalPages > 1 && (
+            <div className="w-full flex justify-end pt-4">
+              <Pagination
+                className="w-max mx-0"
+                page={pagination.page}
+                pages={pagination.totalPages}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <AlertDialog open={openAdd} onOpenChange={setOpenAdd}>
-        <AlertDialogTrigger asChild>
-        </AlertDialogTrigger>
-        <AlertDialogContent className="sm:max-w-lg">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Tambah Akun Sekolah</AlertDialogTitle>
-            <AlertDialogDescription>Isi data institusi dan kontak utama.</AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2 grid gap-2">
-              <Label htmlFor="schoolName">Nama Sekolah</Label>
-              <Input id="schoolName" placeholder="cth. SMA Negeri 3 Tasikmalaya" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="npsn">NPSN</Label>
-              <Input id="npsn" placeholder="cth. 2023xxxx" />
-            </div>
-            <div className="grid gap-2">
-              <Label>Jenjang</Label>
-              <Select defaultValue="sma">
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sma">SMA</SelectItem>
-                  <SelectItem value="smk">SMK</SelectItem>
-                  <SelectItem value="ma">MA</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email Admin</Label>
-              <Input id="email" type="email" placeholder="admin@sekolah.sch.id" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="phone">No. WA Admin</Label>
-              <Input id="phone" type="tel" placeholder="08xxxxxxxxxx" />
-            </div>
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            {/* Desain-only */}
-            <AlertDialogAction>Tambah</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <SekolahAddEditForm
+        open={addEditDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTimeout(() => {
+              setSelectedSekolah(null);
+              setTypeAction('add');
+            }, 200);
+          };
+          setAddEditDialog(open);
+        }}
+        type={typeAction}
+        selectedSekolah={selectedSekolah}
+        onAddSuccess={(item) => {
+          if (!page || (page === '1')) setData((prev) => [item, ...prev]);
+          else navigate.push('?page=1');
+        }}
+        onEditSuccess={(data) => {
+          setData((prev) => {
+            return prev.map((item) => item.id === data.id ? data : item)
+          });
+        }}
+      />
     </div>
-  );
-}
-
-function RowActions() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Ellipsis className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Lihat profil</DropdownMenuItem>
-        <DropdownMenuItem>Kelola admin sekolah</DropdownMenuItem>
-        <DropdownMenuItem>Kelola integrasi WA</DropdownMenuItem>
-        <DropdownMenuItem>Reset password akun</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-rose-600">Nonaktifkan</DropdownMenuItem>
-        <DropdownMenuItem className="text-rose-600">Hapus</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }

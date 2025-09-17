@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
+import { Roles } from "./types"
 
-const JWT_SECRET = process.env.JWT_SECRET || "HanyaUntukModeDevelopment"
+export const JWT_SECRET = process.env.JWT_SECRET || "HanyaUntukModeDevelopment"
 
 export function signJwt(payload: object) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" })
@@ -12,4 +13,9 @@ export function verifyJwt<T>(token: string): T | null {
   } catch {
     return null
   }
+}
+
+export type JwtPayload = {
+  id: string;
+  role: Roles;
 }

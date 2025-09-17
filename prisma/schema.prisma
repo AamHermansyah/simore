@@ -15,23 +15,23 @@ datasource db {
 }
 
 model Siswi {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   nama             String
-  status           Boolean  @default(true) // aktif atau nonaktif
-  poin             Int      @default(0)
-  nisn             String   @unique
-  nomorTelepon     String   @unique
+  status           Boolean   @default(true) // aktif atau nonaktif
+  poin             Int       @default(0)
+  nisn             String    @unique
+  nomorTelepon     String    @unique
   email            String?
-  tanggalLahir     DateTime
+  tanggalLahir     DateTime?
   jurusan          String?
   alamat           String?
   golonganDarah    String?
-  currentStreak    Int      @default(0)
-  bestStreak       Int      @default(0)
+  currentStreak    Int       @default(0)
+  bestStreak       Int       @default(0)
   namaOrtu         String?
   nomorTeleponOrtu String?
   password         String
-  createdAt        DateTime @default(now())
+  createdAt        DateTime  @default(now())
 
   // Relasi
   angkatanId String?
@@ -47,11 +47,10 @@ model Guru {
   id                 String   @id @default(uuid())
   nama               String
   status             Boolean  @default(true)
+  email              String   @unique
   nip                String   @unique
   posisi             String?
-  email              String   @unique
   nomorTelepon       String?
-  tanggalLahir       DateTime
   alamat             String?
   pendidikanTerakhir String?
   universitas        String?
@@ -61,13 +60,14 @@ model Guru {
 
   sekolahId String?
   sekolah   Sekolah?   @relation(fields: [sekolahId], references: [id])
-  Angkatan  Angkatan[]
+  angkatan  Angkatan[]
 }
 
 model Angkatan {
-  id     String  @id @default(uuid())
-  nama   String
-  status Boolean @default(true)
+  id        String   @id @default(uuid())
+  nama      String
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
 
   // Relasi
   guruId String?
@@ -80,11 +80,12 @@ model Angkatan {
 }
 
 model Sekolah {
-  id                        String   @id @default(uuid())
+  id                        String       @id @default(uuid())
   nama                      String
-  nspn                      String   @unique
-  status                    Boolean  @default(true)
-  email                     String   @unique
+  nspn                      String       @unique
+  status                    Boolean      @default(true)
+  email                     String       @unique
+  jenjang                   JenisJenjang
   wilayah                   String?
   nomorTeleponSekolah       String?
   website                   String?
@@ -95,7 +96,7 @@ model Sekolah {
   namaKoordinator           String?
   nomorTeleponKoordinator   String?
   password                  String
-  createdAt                 DateTime @default(now())
+  createdAt                 DateTime     @default(now())
 
   // Relasi
   siswi            Siswi[]
@@ -167,4 +168,12 @@ enum StatusLaporan {
   TERKIRIM
   DIVERIFIKASI
   TERLEWAT
+}
+
+enum JenisJenjang {
+  SMP
+  MTS
+  SMA
+  SMK
+  MA
 }

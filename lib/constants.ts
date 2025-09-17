@@ -134,6 +134,11 @@ export const navigations: NavigationGroup[] = [
     role: 'PUSKESMAS',
     items: [
       {
+        title: "Ringkasan",
+        url: "/puskesmas",
+        icon: RiPieChartLine,
+      },
+      {
         title: "Siswi",
         url: "#",
         icon: RiTeamLine,
@@ -156,7 +161,7 @@ export const navigations: NavigationGroup[] = [
     items: [
       {
         title: "Ringkasan",
-        url: "#",
+        url: "/admin",
         icon: RiPieChartLine,
       },
       {
