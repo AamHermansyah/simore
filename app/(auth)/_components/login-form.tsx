@@ -17,8 +17,12 @@ import {
 import { PasswordInput } from "@/components/core/password-input"
 import { Separator } from "@/components/ui/separator"
 import { getColorClasses, roles } from "@/lib/constants"
-import Link from "next/link"
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import {
   Form,
   FormControl,
@@ -193,14 +197,21 @@ function LoginForm() {
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
             Lupa password?{" "}
-            <Link
-              href="https://wa.me/6282316126449"
-              className="text-yellow-500 hover:underline cursor-pointer"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Hubungi administrator
-            </Link>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-yellow-500 hover:underline cursor-pointer">
+                    Hubungi administrator
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="border border-foreground/20">
+                  <p className="w-[200px]">
+                    Segera hubungi administrator yang mengelola akun Anda untuk
+                    pemulihan password.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </p>
         </div>
       </CardContent>

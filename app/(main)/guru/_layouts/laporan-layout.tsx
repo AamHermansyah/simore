@@ -36,7 +36,7 @@ import { Ellipsis, LoaderCircle } from "lucide-react";
 import SearchInput from "@/components/shared/search-input";
 import { toast } from "sonner";
 import axios, { CancelTokenSource, isAxiosError } from "axios";
-import { Angkatan, Guru, Laporan, Siswi, StatusLaporan } from "@/lib/generated/prisma";
+import { Angkatan, Laporan, Siswi, StatusLaporan } from "@/lib/generated/prisma";
 import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";

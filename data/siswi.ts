@@ -1,4 +1,4 @@
-import { JWT_SECRET, JwtPayload } from "@/lib/auth";
+import { JWT_SECRET, JwtPayload, verifyJwt } from "@/lib/auth";
 import { Prisma } from "@/lib/generated/prisma"
 import prisma from "@/lib/prisma"
 import { cookies } from "next/headers";
@@ -60,6 +60,108 @@ export async function getAllSiswi({ q, page, limit, sekolahId, angkatanId, statu
     return {
       success: false,
       message: (error as Error).message
+    }
+  }
+}
+
+export async function getSiswi() {
+  try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("token")?.value
+
+    const decoded = jwt.verify(token!, JWT_SECRET) as JwtPayload
+    if (!decoded?.id) {
+      throw new Error("Token tidak valid")
+    }
+
+    const siswi = await prisma.siswi.findUnique({
+      where: { id: decoded.id },
+      include: { angkatan: true }
+    })
+
+    if (!siswi) {
+      throw new Error("Siswi tidak ditemukan")
+    }
+
+    return {
+      success: true,
+      data: siswi
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as Error).message || "Terjadi kesalahan",
+    }
+  }
+}
+
+export async function getSiswiSummary() {
+  try {
+    const c = await cookies()
+    const token = c.get("token")?.value || null
+
+    const decoded = verifyJwt(token || "") as JwtPayload | null
+    if (!decoded) {
+      return {
+        success: false,
+        message: "Token invalid",
+      }
+    }
+
+    // 1. Ambil data siswi
+    const siswi = await prisma.siswi.findUnique({
+      where: { id: decoded.id },
+      select: {
+        nama: true,
+        poin: true,
+        bestStreak: true,
+        currentStreak: true,
+      },
+    })
+
+    if (!siswi) {
+      throw new Error("Siswi tidak ditemukan")
+    }
+
+    // 2. Ambil semua laporan siswi ini
+    const laporan = await prisma.laporan.findMany({
+      where: { siswiId: decoded.id },
+      select: { id: true, status: true, createdAt: true, rewardPoint: true },
+      orderBy: { createdAt: "asc" },
+    })
+
+    // 4. Hitung kepatuhan & total tidak melapor
+    const totalLaporan = laporan.length
+    const totalTidakMelapor = laporan.filter(
+      (l) => l.status === "TERLEWAT"
+    ).length
+
+    // Misalnya kepatuhan = laporan diverifikasi / total laporan * 100
+    const totalVerified = laporan.filter(
+      (l) => l.status === "DIVERIFIKASI"
+    ).length
+    const kepatuhan =
+      totalLaporan > 0
+        ? Math.round((totalVerified / totalLaporan) * 100)
+        : 0
+
+    return {
+      success: true,
+      data: {
+        nama: siswi.nama,
+        poin: siswi.poin,
+        bestStreak: siswi.bestStreak,
+        currentStreak: siswi.currentStreak,
+        kepatuhan,
+        totalTidakMelapor,
+        laporan,
+        totalLaporan: laporan.length
+      },
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as Error).message,
     }
   }
 }

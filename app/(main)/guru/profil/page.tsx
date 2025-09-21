@@ -2,7 +2,7 @@ import React from 'react'
 import ProfileLayout from '../_layouts/profile-layout'
 import { getGuru } from '@/data/guru';
 
-async function SekolahProfilePage() {
+async function GuruProfilePage() {
   const res = await getGuru();
   if (!res.success) throw Error(res.message);
 
@@ -11,4 +11,4 @@ async function SekolahProfilePage() {
   )
 }
 
-export default SekolahProfilePage
+export default GuruProfilePage

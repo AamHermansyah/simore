@@ -4,7 +4,7 @@ import { StatsGrid } from "../../_components/stats-grid";
 import { Card, CardContent } from '@/components/ui/card';
 import Graph from '../_components/graph';
 import { ComplianceChart } from '../_components/compliance-chart';
-import { getSiswiSummary } from '@/actions/laporan';
+import { getSiswiSummary } from '@/data/siswi';
 import { Separator } from '@/components/ui/separator';
 import { Crown, Flame } from 'lucide-react';
 
@@ -23,7 +23,7 @@ async function SiswiDashboardPage() {
         </p>
       </div>
 
-      <Card className="lg:w-max gap-1 bg-gradient-to-br from-primary to-orange-500 rounded-2xl">
+      <Card className="gap-1 bg-gradient-to-br from-primary to-orange-500 rounded-2xl">
         <CardContent className="space-y-4 flex flex-col sm:flex-row sm:items-center gap-3">
           {/* Poin */}
           <div className="px-3">

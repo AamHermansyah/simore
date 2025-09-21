@@ -27,3 +27,18 @@ export const addSiswiSchema = z.object({
   })
 
 export type AddSiswiFormValues = z.infer<typeof addSiswiSchema>
+
+export const profileSchema = z.object({
+  nama: z.string().min(1, "Nama wajib diisi"),
+  nisn: z.string().min(1, "NISN wajib diisi"),
+  email: z.string().email("Email tidak valid").optional().or(z.literal("")),
+  nomorTelepon: z.string().min(1, "Nomor telepon wajib diisi"),
+  alamat: z.string().optional(),
+  tanggalLahir: z.string().optional(),
+  jurusan: z.string().optional(),
+  golonganDarah: z.string().optional(),
+  namaOrtu: z.string().optional(),
+  nomorTeleponOrtu: z.string().optional(),
+})
+
+export type ProfileFormValues = z.infer<typeof profileSchema>

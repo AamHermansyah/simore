@@ -150,11 +150,30 @@ export async function editGuru(data: ProfileFormValues) {
   if (!parsed.success) {
     return {
       success: false,
-      message: z.treeifyError(parsed.error).errors.join(', ')
-    }
+      message: z.treeifyError(parsed.error).errors.join(", "),
+    };
   }
 
   try {
+    // Cek apakah email atau NIP sudah dipakai guru lain
+    const existing = await prisma.guru.findFirst({
+      where: {
+        OR: [{ email: data.email }, { nip: data.nip }],
+        NOT: { id: decoded.id }, // exclude dirinya sendiri
+      },
+    });
+
+    if (existing) {
+      let message = '';
+      if (existing.email === data.email) message += 'Email sudah digunakan. ';
+      if (existing.nip === data.nip) message += 'NIP sudah digunakan.';
+      return {
+        success: false,
+        message: message.trim(),
+      };
+    }
+
+    // Update data
     const updated = await prisma.guru.update({
       where: { id: decoded.id },
       data,
@@ -162,12 +181,12 @@ export async function editGuru(data: ProfileFormValues) {
 
     return {
       success: true,
-      data: updated
+      data: updated,
     };
   } catch (err) {
     return {
       success: false,
-      message: "Terjadi kesalahan server"
+      message: "Terjadi kesalahan server",
     };
   }
 }

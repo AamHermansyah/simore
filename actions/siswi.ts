@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import z from "zod";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JwtPayload } from "@/lib/auth";
-import { AddSiswiFormValues, addSiswiSchema } from "@/lib/schemas/siswi";
+import { AddSiswiFormValues, addSiswiSchema, ProfileFormValues, profileSchema } from "@/lib/schemas/siswi";
 
 export async function addSiswi(values: Omit<AddSiswiFormValues, 'type'>, sekolahId: string) {
   try {
@@ -144,3 +144,65 @@ export async function updateSiswiAccount(values: Omit<AddSiswiFormValues, 'type'
     }
   }
 }
+
+export async function editSiswi(data: ProfileFormValues) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  const decoded = jwt.verify(token!, JWT_SECRET) as JwtPayload;
+  if (!decoded?.id) {
+    throw new Error("Token tidak valid");
+  }
+
+  const parsed = profileSchema.safeParse(data);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: z.treeifyError(parsed.error).errors.join(", "),
+    };
+  }
+
+  try {
+    // Cek nisn / nomorTelepon sudah ada pada siswi lain
+    const existing = await prisma.siswi.findFirst({
+      where: {
+        OR: [
+          { nisn: data.nisn },
+          { nomorTelepon: data.nomorTelepon },
+        ],
+        NOT: { id: decoded.id }, // supaya tidak konflik dengan dirinya sendiri
+      },
+    });
+
+    if (existing) {
+      let message = '';
+      if (existing.nisn === data.nisn) message += 'NISN sudah digunakan. ';
+      if (existing.nomorTelepon === data.nomorTelepon) message += 'Nomor telepon sudah digunakan.';
+      return {
+        success: false,
+        message: message.trim(),
+      };
+    }
+
+    // Update data
+    const updated = await prisma.siswi.update({
+      where: { id: decoded.id },
+      data: {
+        ...data,
+        tanggalLahir: data.tanggalLahir ? new Date(data.tanggalLahir) : undefined,
+      },
+      include: { angkatan: true },
+    });
+
+    return {
+      success: true,
+      data: updated,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Terjadi kesalahan server",
+    };
+  }
+}
+

@@ -146,11 +146,30 @@ export async function editSekolah(data: ProfileFormValues) {
   if (!parsed.success) {
     return {
       success: false,
-      message: z.treeifyError(parsed.error).errors.join(', ')
-    }
+      message: z.treeifyError(parsed.error).errors.join(", "),
+    };
   }
 
   try {
+    // Cek apakah NPSN atau Email sudah dipakai sekolah lain
+    const existing = await prisma.sekolah.findFirst({
+      where: {
+        OR: [{ nspn: data.nspn }, { email: data.email }],
+        NOT: { id: decoded.id }, // exclude sekolah yang lagi login
+      },
+    });
+
+    if (existing) {
+      let message = '';
+      if (existing.nspn === data.nspn) message += 'NPSN sudah digunakan. ';
+      if (existing.email === data.email) message += 'Email sudah digunakan.';
+      return {
+        success: false,
+        message: message.trim(),
+      };
+    }
+
+    // Update data sekolah
     const updated = await prisma.sekolah.update({
       where: { id: decoded.id },
       data,
@@ -158,12 +177,12 @@ export async function editSekolah(data: ProfileFormValues) {
 
     return {
       success: true,
-      data: updated
+      data: updated,
     };
   } catch (err) {
     return {
       success: false,
-      message: "Terjadi kesalahan server"
+      message: "Terjadi kesalahan server",
     };
   }
 }
