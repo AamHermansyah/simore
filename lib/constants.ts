@@ -10,6 +10,7 @@ import {
   RiBarChart2Line,
   RiProfileLine,
   RiGraduationCapLine,
+  RiTaskLine,
 } from "@remixicon/react";
 import {
   BarChart3,
@@ -24,6 +25,7 @@ import {
   Users
 } from "lucide-react";
 import { NavigationGroup } from "./types";
+import { Day } from "date-fns";
 
 export const navigations: NavigationGroup[] = [
   {
@@ -63,18 +65,18 @@ export const navigations: NavigationGroup[] = [
     items: [
       {
         title: "Ringkasan",
-        url: "#",
+        url: "/guru",
         icon: RiPieChartLine,
       },
       {
         title: "Siswi",
-        url: "#",
+        url: "/guru/angkatan",
         icon: RiTeamLine,
       },
       {
-        title: "Verifikasi Laporan",
-        url: "#",
-        icon: RiHealthBookLine,
+        title: "Laporan Siswi",
+        url: "/guru/laporan",
+        icon: RiTaskLine,
       },
       {
         title: "Papan Skor",
@@ -113,13 +115,18 @@ export const navigations: NavigationGroup[] = [
         icon: RiTeamLine,
       },
       {
+        title: "Laporan Siswi",
+        url: "/sekolah/laporan",
+        icon: RiTaskLine,
+      },
+      {
         title: "Papan Skor",
         url: "/siswi/peringkat",
         icon: RiTrophyLine,
       },
       {
-        title: "Laporan",
-        url: "#",
+        title: "Analisis",
+        url: "/sekolah/analisis",
         icon: RiBarChart2Line,
       },
       {
@@ -283,4 +290,13 @@ export const getColorClasses = (color: string) => {
     }
   };
   return colors[color as keyof typeof colors] || colors.emerald;
+};
+
+// 0 - 6 (Senin - Minggu)
+export const submitTimes = {
+  day: 0 as Day,
+  start: 6,
+  end: 21,
+  maxPoint: 200,
+  step: 10,
 };

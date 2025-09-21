@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import z from "zod";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JwtPayload } from "@/lib/auth";
-import { AddGuruFormValues, addGuruSchema } from "@/lib/schemas/guru";
+import { AddGuruFormValues, addGuruSchema, ProfileFormValues, profileSchema } from "@/lib/schemas/guru";
 
 export async function addGuru(values: Omit<AddGuruFormValues, 'type'>, sekolahId: string) {
   try {
@@ -134,5 +134,40 @@ export async function updateGuruAccount(values: Omit<AddGuruFormValues, 'type'>,
       success: false,
       message: (error as Error).message,
     }
+  }
+}
+
+export async function editGuru(data: ProfileFormValues) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  const decoded = jwt.verify(token!, JWT_SECRET) as JwtPayload;
+  if (!decoded?.id) {
+    throw new Error("Token tidak valid");
+  }
+
+  const parsed = profileSchema.safeParse(data);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: z.treeifyError(parsed.error).errors.join(', ')
+    }
+  }
+
+  try {
+    const updated = await prisma.guru.update({
+      where: { id: decoded.id },
+      data,
+    });
+
+    return {
+      success: true,
+      data: updated
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Terjadi kesalahan server"
+    };
   }
 }

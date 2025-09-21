@@ -34,9 +34,11 @@ import { Angkatan, Guru } from "@/lib/generated/prisma";
 import { Pagination } from "@/components/ui/pagination";
 import { AngkatanAddEditForm } from "../_components/angkatan-add-edit-form";
 
-type AngkatanData = Angkatan & {
+type AngkatanData = Pick<Angkatan, 'id' | 'nama' | 'createdAt' | 'status'> & {
   guru: Pick<Guru, 'id' | 'nama'> | null;
-  _count: { siswi: number };
+  totalSiswi: number;
+  totalSiswiAktif: number;
+  kepatuhan: number;
 }
 
 interface IProps {
@@ -150,6 +152,8 @@ export default function AngkatanLayout({ sekolahId, guruData }: IProps) {
                 <TableHead>Angkatan</TableHead>
                 <TableHead>Guru Pengelola</TableHead>
                 <TableHead>Jumlah Siswi</TableHead>
+                <TableHead>Siswa Aktif</TableHead>
+                <TableHead>Kepatuhan Mingguan</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
@@ -167,7 +171,7 @@ export default function AngkatanLayout({ sekolahId, guruData }: IProps) {
                     data.map((angkatan) => (
                       <TableRow key={angkatan.id}>
                         <TableCell>
-                          <div className="font-medium">2022/2023</div>
+                          <div className="font-medium">{angkatan.nama}</div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2 text-sm">
@@ -175,7 +179,13 @@ export default function AngkatanLayout({ sekolahId, guruData }: IProps) {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {angkatan._count.siswi}
+                          {angkatan.totalSiswi}
+                        </TableCell>
+                        <TableCell>
+                          {angkatan.totalSiswiAktif}
+                        </TableCell>
+                        <TableCell>
+                          {angkatan.kepatuhan}%
                         </TableCell>
                         <TableCell>
                           <Badge variant={angkatan.status ? 'default' : 'outline'}>

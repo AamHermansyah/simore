@@ -68,7 +68,7 @@ export async function getSekolah() {
     });
 
     if (!sekolah) {
-      throw new Error("Super admin tidak ditemukan");
+      throw new Error("Sekolah tidak ditemukan");
     }
 
     // 3. Hitung total data

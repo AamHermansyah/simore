@@ -13,6 +13,7 @@ interface Props {
   maxWidth?: number;
   mirrorPreview?: boolean;
   mirrorCapture?: boolean;
+  disabled?: boolean;
 }
 
 export default function CameraCapture({
@@ -20,6 +21,7 @@ export default function CameraCapture({
   maxWidth = 1280,
   mirrorPreview = true,
   mirrorCapture = true,
+  disabled
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -28,7 +30,6 @@ export default function CameraCapture({
   const [facingMode, setFacingMode] = useState<FacingMode>('environment');
   const [isStreaming, setIsStreaming] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [capturedFile, setCapturedFile] = useState<File | null>(null);
 
   const start = async (preferredFacing: FacingMode = facingMode) => {
     if (typeof window === 'undefined' || !navigator?.mediaDevices) {
@@ -143,7 +144,6 @@ export default function CameraCapture({
     const url = URL.createObjectURL(blob);
 
     setPreviewUrl(url);
-    setCapturedFile(file);
     onChange?.(file);
 
     // Matikan kamera setelah berhasil capture (hemat baterai)
@@ -153,7 +153,6 @@ export default function CameraCapture({
   const retake = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
-    setCapturedFile(null);
     onChange?.(null);
     start(facingMode);
   };
@@ -220,7 +219,7 @@ export default function CameraCapture({
             )}
           />
           <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-2">
-            <Button type="button" variant="secondary" onClick={retake}>
+            <Button type="button" variant="secondary" onClick={retake} disabled={disabled}>
               <CameraOff className="h-4 w-4" />
               Retake
             </Button>

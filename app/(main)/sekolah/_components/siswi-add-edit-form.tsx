@@ -46,11 +46,11 @@ interface IProps {
   selectedSiswi: SiswiData | null;
   onAddSuccess: (data: SiswiData) => void;
   onEditSuccess: (data: SiswiData) => void;
-  angkatanData: (Angkatan & {
-    guru: Pick<Guru, 'id' | 'nama'> | null,
-    _count: {
-      siswi: number;
-    }
+  angkatanData: (Pick<Angkatan, 'id' | 'nama' | 'createdAt' | 'status'> & {
+    guru: Pick<Guru, 'id' | 'nama'> | null;
+    totalSiswi: number;
+    totalSiswiAktif: number;
+    kepatuhan: number;
   })[]
 }
 

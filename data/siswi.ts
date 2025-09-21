@@ -8,7 +8,7 @@ interface GetAllSiswiProps {
   q?: string;
   page: number;
   limit: number;
-  sekolahId: string;
+  sekolahId?: string;
   status?: '0' | '1';
   angkatanId?: string;
 }

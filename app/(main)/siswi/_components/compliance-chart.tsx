@@ -10,65 +10,94 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-
-export const description = "A pie chart with a label list"
-
-const chartData = [
-  { type: "report", weeks: 20, fill: "var(--color-report)" },
-  { type: "notReport", weeks: 2, fill: "var(--color-notReport)" },
-]
+import { Laporan } from "@/lib/generated/prisma"
 
 const chartConfig = {
-  weeks: {
+  total: {
     label: "Total",
   },
-  report: {
+  reported: {
     label: "Melapor",
-    color: "var(--chart-4)",
+    color: "#5EE9B5",
   },
-  notReport: {
-    label: "Tidak Melapor",
-    color: "var(--chart-3)",
+  pending: {
+    label: "Pending",
+    color: "#74D4FF",
+  },
+  rejected: {
+    label: "Ditolak",
+    color: "#F4B0B3",
+  },
+  missed: {
+    label: "Terlewat",
+    color: "#EEEEEE",
   },
 } satisfies ChartConfig
 
-export function ComplianceChart() {
+interface IProps {
+  data: Pick<Laporan, 'id' | 'status' | 'createdAt' | 'rewardPoint'>[];
+}
+
+export function ComplianceChart({ data }: IProps) {
+  const chartData = [
+    {
+      type: "reported",
+      total: data.filter((item) => item.status === "DIVERIFIKASI").length,
+      fill: "var(--color-reported)",
+    },
+    {
+      type: "pending",
+      total: data.filter((item) => item.status === "TERKIRIM").length,
+      fill: "var(--color-pending)",
+    },
+    {
+      type: "rejected",
+      total: data.filter((item) => item.status === "DITOLAK").length,
+      fill: "var(--color-rejected)",
+    },
+    {
+      type: "missed",
+      total: data.filter((item) => item.status === "TERLEWAT").length,
+      fill: "var(--color-missed)",
+    },
+  ].filter((item) => item.total > 0)
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Grafik Kepatuhan</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="[&_.recharts-text]:fill-foreground mx-auto w-full h-[250px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              content={<ChartTooltipContent nameKey="weeks" hideLabel />}
-            />
-            <Pie data={chartData} dataKey="weeks">
-              <LabelList
-                dataKey="type"
-                className="fill-foreground"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: keyof typeof chartConfig) =>
-                  chartConfig[value]?.label
-                }
+        {chartData.length > 0 ? (
+          <ChartContainer
+            config={chartConfig}
+            className="[&_.recharts-text]:fill-foreground mx-auto w-full h-[250px]"
+          >
+            <PieChart>
+              <ChartTooltip
+                content={<ChartTooltipContent nameKey="total" hideLabel />}
               />
-            </Pie>
-            <ChartLegend
-              content={<ChartLegendContent nameKey="type" />}
-              className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
-            />
-          </PieChart>
-        </ChartContainer>
+              <Pie data={chartData} dataKey="total">
+                <LabelList
+                  dataKey="type"
+                  className="fill-foreground"
+                  stroke="none"
+                  fontSize={12}
+                  formatter={(value: keyof typeof chartConfig) =>
+                    `${chartConfig[value]?.label} (${chartData.find((i) => i.type === value)?.total})`
+                  }
+                />
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+        ) : (
+          <p className="text-center text-sm h-10">
+            Grafik masih kosong
+          </p>
+        )}
       </CardContent>
     </Card>
   )

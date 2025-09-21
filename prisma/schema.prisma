@@ -54,7 +54,7 @@ model Guru {
   alamat             String?
   pendidikanTerakhir String?
   universitas        String?
-  tahunLulus         Int?
+  tahunLulus         String?
   password           String
   createdAt          DateTime @default(now())
 
@@ -154,6 +154,7 @@ model Laporan {
   id          String        @id @default(uuid())
   buktiGambar String
   status      StatusLaporan
+  rewardPoint Int
   catatanGuru String?
   keluhan     String?
   createdAt   DateTime      @default(now())

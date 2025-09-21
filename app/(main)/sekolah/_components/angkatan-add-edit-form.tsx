@@ -31,9 +31,11 @@ import { AddAngkatanFormValues, addAngkatanSchema } from "@/lib/schemas/angkatan
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { addAngkatan, updateAngkatan } from "@/actions/angkatan"
 
-type AngkatanData = Angkatan & {
+type AngkatanData = Pick<Angkatan, 'id' | 'nama' | 'createdAt' | 'status'> & {
   guru: Pick<Guru, 'id' | 'nama'> | null;
-  _count: { siswi: number };
+  totalSiswi: number;
+  totalSiswiAktif: number;
+  kepatuhan: number;
 }
 
 interface IProps {
@@ -100,7 +102,7 @@ export function AngkatanAddEditForm({
     if ((type === 'edit') && selectedAngkatan) {
       form.setValue('type', type);
       form.setValue('nama', selectedAngkatan.nama);
-      if (selectedAngkatan.guruId) form.setValue('guruId', selectedAngkatan.guruId);
+      if (selectedAngkatan.guru) form.setValue('guruId', selectedAngkatan.guru.id);
     }
   }, [type]);
 

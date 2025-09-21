@@ -51,3 +51,72 @@ export async function getAllGuru({ q, page, limit, sekolahId }: GetAllGuruProps)
     }
   }
 }
+
+export async function getGuru() {
+  try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("token")?.value
+
+    const decoded = jwt.verify(token!, JWT_SECRET) as JwtPayload
+    if (!decoded?.id) {
+      throw new Error("Token tidak valid")
+    }
+
+    const guru = await prisma.guru.findUnique({
+      where: { id: decoded.id },
+    })
+
+    if (!guru) {
+      throw new Error("Guru tidak ditemukan")
+    }
+
+    const sekolahId = guru.sekolahId
+
+    // Jalankan query paralel agar efisien
+    const [totalSiswi, totalSiswiAktif, totalAngkatan] = await Promise.all([
+      // Semua siswi dari angkatan yang diampu guru ini
+      prisma.siswi.count({
+        where: {
+          angkatan: {
+            guruId: guru.id,
+            sekolahId: sekolahId,
+          },
+        },
+      }),
+
+      // Hanya siswi aktif dari angkatan yang diampu guru ini
+      prisma.siswi.count({
+        where: {
+          status: true,
+          angkatan: {
+            guruId: guru.id,
+            sekolahId: sekolahId,
+          },
+        },
+      }),
+
+      // Angkatan yang diampu guru ini
+      prisma.angkatan.count({
+        where: {
+          sekolahId: sekolahId,
+          guruId: guru.id,
+        },
+      }),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        guru,
+        totalSiswi,
+        totalSiswiAktif,
+        totalAngkatan,
+      },
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as Error).message || "Terjadi kesalahan",
+    }
+  }
+}

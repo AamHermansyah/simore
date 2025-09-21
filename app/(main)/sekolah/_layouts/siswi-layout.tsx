@@ -53,11 +53,11 @@ type SiswiData = Siswi & {
 
 interface IProps {
   sekolahId: string;
-  angkatanData: (Angkatan & {
-    guru: Pick<Guru, 'id' | 'nama'> | null,
-    _count: {
-      siswi: number;
-    }
+  angkatanData: (Pick<Angkatan, 'id' | 'nama' | 'createdAt' | 'status'> & {
+    guru: Pick<Guru, 'id' | 'nama'> | null;
+    totalSiswi: number;
+    totalSiswiAktif: number;
+    kepatuhan: number;
   })[]
 }
 
