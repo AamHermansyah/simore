@@ -7,7 +7,6 @@ import {
   RiHistoryLine,
   RiAdminLine,
   RiHospitalLine,
-  RiBarChart2Line,
   RiProfileLine,
   RiGraduationCapLine,
   RiTaskLine,
@@ -142,12 +141,17 @@ export const navigations: NavigationGroup[] = [
       },
       {
         title: "Siswi",
-        url: "#",
+        url: "/puskesmas/siswi",
         icon: RiTeamLine,
       },
       {
+        title: "Laporan Siswi",
+        url: "/puskesmas/laporan",
+        icon: RiTaskLine,
+      },
+      {
         title: "Papan Skor",
-        url: "/guru/siswi/peringkat",
+        url: "/puskesmas/peringkat-siswi",
         icon: RiTrophyLine,
       },
       {

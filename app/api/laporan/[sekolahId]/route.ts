@@ -20,7 +20,7 @@ export async function GET(req: Request, { params }: IParams) {
     const token = c.get('token')?.value || null;
 
     const decoded = verifyJwt(token || '') as JwtPayload | null;
-    if (!decoded || decoded.role !== "SEKOLAH") {
+    if (!decoded || !['SEKOLAH', 'PUSKESMAS'].includes(decoded.role)) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }

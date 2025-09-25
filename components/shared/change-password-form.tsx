@@ -11,7 +11,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel } from "@/components/ui/alert-dialog";
 import { PasswordInput } from "@/components/core/password-input";
 import { useState, useTransition } from "react";
 import { changePassword } from "@/actions/auth";

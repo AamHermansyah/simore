@@ -17,7 +17,7 @@ async function SekolahDashboardPage() {
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold">Halo, {data.nama}!</h1>
         <p className="text-sm text-muted-foreground">
-          Selamat datang di dashboard guru. Disini kamu bisa memonitor laporan siswi, kepatuhan, dan performa mingguan mereka.
+          Selamat datang di dashboard sekolah. Disini kamu bisa memonitor laporan siswi, kepatuhan, dan performa mingguan mereka.
         </p>
       </div>
 

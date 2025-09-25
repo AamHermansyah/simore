@@ -14,7 +14,7 @@ async function MainLayout({ children }: { children: React.ReactNode }) {
   const role = c.get('role')!.value as Roles;
   const res = await getSekolahList();
 
-  if (!res.success) throw new Error(res.message);
+  if (!res.success || (!res.data!.length)) throw new Error(res.message || 'Daftar sekolah tidak ditemukan')
 
   return (
     <SidebarProvider>

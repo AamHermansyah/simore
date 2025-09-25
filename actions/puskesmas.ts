@@ -2,9 +2,12 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { AddPuskesmasFormValues, addPuskesmasSchema } from "@/lib/schemas/puskesmas";
+import { AddPuskesmasFormValues, addPuskesmasSchema, ProfileFormValues, profileSchema } from "@/lib/schemas/puskesmas";
 import { hash } from "bcrypt"
 import z from "zod";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET, JwtPayload } from "@/lib/auth";
 
 export async function addPuskesmas(values: Omit<AddPuskesmasFormValues, 'type'>) {
   try {
@@ -134,5 +137,63 @@ export async function updatePuskesmasAccount(
       success: false,
       message: (error as Error).message,
     };
+  }
+}
+
+export async function editPuskesmas(data: ProfileFormValues) {
+  const cookieStore = await cookies()
+  const token = cookieStore.get("token")?.value
+
+  const decoded = jwt.verify(token!, JWT_SECRET) as JwtPayload
+  if (!decoded?.id) {
+    throw new Error("Token tidak valid")
+  }
+
+  const parsed = profileSchema.safeParse(data)
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: z.treeifyError(parsed.error).errors.join(", "),
+    }
+  }
+
+  try {
+    // Cek apakah email atau NIP sudah dipakai puskesmas lain
+    const existing = await prisma.puskesmas.findFirst({
+      where: {
+        OR: [
+          { email: data.email },
+          data.nip ? { nip: data.nip } : undefined, // cek NIP kalau ada
+        ].filter(Boolean) as any,
+        NOT: { id: decoded.id }, // exclude dirinya sendiri
+      },
+    })
+
+    if (existing) {
+      let message = ""
+      if (existing.email === data.email) message += "Email sudah digunakan. "
+      if (data.nip && existing.nip === data.nip) message += "NIP sudah digunakan."
+      return {
+        success: false,
+        message: message.trim(),
+      }
+    }
+
+    // Update data Puskesmas
+    const updated = await prisma.puskesmas.update({
+      where: { id: decoded.id },
+      data,
+    })
+
+    return {
+      success: true,
+      data: updated,
+    }
+  } catch (err) {
+    console.error(err)
+    return {
+      success: false,
+      message: "Terjadi kesalahan server",
+    }
   }
 }

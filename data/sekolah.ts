@@ -96,22 +96,28 @@ export async function getSekolah() {
   }
 }
 
-export async function getSekolahSummary() {
+export async function getSekolahSummary(id?: string) {
   try {
-    const c = await cookies();
-    const token = c.get("token")?.value || null;
+    let sekolahId = id;
 
-    const decoded = verifyJwt(token || "") as JwtPayload | null;
-    if (!decoded) {
-      return {
-        success: false,
-        message: "Token invalid",
-      };
+    if (!sekolahId) {
+      const c = await cookies();
+      const token = c.get("token")?.value || null;
+
+      const decoded = verifyJwt(token || "") as JwtPayload | null;
+      if (!decoded) {
+        return {
+          success: false,
+          message: "Token invalid",
+        };
+      }
+
+      sekolahId = decoded.id;
     }
 
     // Ambil sekolah + data guru + siswi
     const sekolah = await prisma.sekolah.findUnique({
-      where: { id: decoded.id },
+      where: { id: sekolahId },
       select: {
         nama: true,
         email: true,
@@ -143,7 +149,7 @@ export async function getSekolahSummary() {
     const [laporanAll, totalAngkatan] = await Promise.all([
       prisma.laporan.findMany({
         where: {
-          siswi: { sekolahId: decoded.id },
+          siswi: { sekolahId: sekolahId },
           createdAt: {
             gte: sixMonthsAgo,
           },
@@ -157,7 +163,7 @@ export async function getSekolahSummary() {
         },
       }),
       prisma.angkatan.count({
-        where: { sekolahId: decoded.id },
+        where: { sekolahId: sekolahId },
       }),
     ]);
 

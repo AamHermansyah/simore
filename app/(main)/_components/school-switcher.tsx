@@ -19,6 +19,7 @@ import { RiExpandUpDownLine, RiAddLine } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Roles } from "@/lib/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface IProps {
   data: {
@@ -30,6 +31,17 @@ interface IProps {
 
 export function SchoolSwitcher({ data, role }: IProps) {
   const [activeSchool, setActiveSchool] = React.useState(data[0] ?? null);
+  const navigate = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleRedirect = (id: string) => {
+    // Buat objek query baru dari searchParams saat ini
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sekolahId", id);
+
+    navigate.replace(`${pathname}?${params.toString()}`);
+  };
 
   if (!data.length) return null;
 
@@ -74,10 +86,13 @@ export function SchoolSwitcher({ data, role }: IProps) {
             <DropdownMenuLabel className="uppercase text-muted-foreground/60 text-xs">
               Sekolah
             </DropdownMenuLabel>
-            {data.map((team) => (
+            {data.map((sekolah) => (
               <DropdownMenuItem
-                key={team.nama}
-                onClick={() => setActiveSchool(team)}
+                key={sekolah.nama}
+                onClick={() => {
+                  setActiveSchool(sekolah);
+                  handleRedirect(sekolah.id);
+                }}
                 className="gap-2 p-2"
               >
                 <div className="relative size-6 bg-white rounded-full overflow-hidden border">
@@ -88,7 +103,7 @@ export function SchoolSwitcher({ data, role }: IProps) {
                     className="p-1"
                   />
                 </div>
-                {team.nama}
+                {sekolah.nama}
               </DropdownMenuItem>
             ))}
             {role === 'SUPERADMIN' && (

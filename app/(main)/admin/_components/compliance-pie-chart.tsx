@@ -15,7 +15,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { Laporan } from "@/lib/generated/prisma"
 
 const chartConfig = {
   reported: { label: "Melapor", color: "#5EE9B5" },
