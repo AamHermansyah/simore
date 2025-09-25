@@ -1,10 +1,10 @@
 import React from 'react'
 import PeringkatLayout from '../../_layouts/peringkat-layout'
 
-function SiswiPeringkatPage() {
+function SekolahPeringkatSiswiPage() {
   return (
     <PeringkatLayout />
   )
 }
 
-export default SiswiPeringkatPage
+export default SekolahPeringkatSiswiPage

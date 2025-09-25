@@ -22,12 +22,17 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface IProps extends React.ComponentProps<typeof Sidebar> {
   role: Roles;
+  sekolahs: {
+    id: string;
+    nama: string;
+  }[];
 }
 
-export function AppSidebar({ role, ...props }: IProps) {
+export function AppSidebar({ role, sekolahs, ...props }: IProps) {
   const [loading, startServer] = useTransition();
   const navigate = useRouter();
   const pathname = usePathname();
@@ -35,7 +40,19 @@ export function AppSidebar({ role, ...props }: IProps) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <SchoolSwitcher />
+        {role !== 'SUPERADMIN' ? <SchoolSwitcher data={sekolahs} role={role} /> : (
+          <div className="w-full flex gap-2 items-center p-2">
+            <div className="relative size-8 bg-white rounded-full overflow-hidden border">
+              <Image
+                src="/logo.png"
+                alt="logo"
+                fill
+                className="p-1"
+              />
+            </div>
+            <h2 className="font-medium tracking-wider">Simore</h2>
+          </div>
+        )}
         <hr className="border-t border-border mx-2 -mt-px" />
       </SidebarHeader>
       <SidebarContent>

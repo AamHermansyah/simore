@@ -2,8 +2,8 @@ import React from 'react'
 import { RiAwardLine, RiCheckboxCircleLine, RiCloseCircleLine, RiFileListLine, RiUserLine } from "@remixicon/react";
 import { StatsGrid } from "../../_components/stats-grid";
 import { getGuruSummary } from '@/data/guru';
-import { CompliancePieChart } from '../_components/compliance-pie-chart';
-import { ComplianceAreaChart } from '../_components/compliance-area-chart';
+import { CompliancePieChart } from '../../_components/compliance-pie-chart';
+import { ComplianceAreaChart } from '../../_components/compliance-area-chart';
 
 async function GuruDashboardPage() {
   const res = await getGuruSummary();

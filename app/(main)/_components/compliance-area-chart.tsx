@@ -61,9 +61,9 @@ export function ComplianceAreaChart({ data }: IProps) {
   }))
 
   const chartConfig = {
-    diverifikasi: { label: "Diverifikasi", color: "var(--chart-1)" },
-    terkirim: { label: "Terkirim", color: "var(--chart-2)" },
-    ditolak: { label: "Ditolak", color: "var(--chart-3)" },
+    diverifikasi: { label: "Diverifikasi", color: "var(--chart-2)" },
+    terkirim: { label: "Terkirim", color: "var(--chart-3)" },
+    ditolak: { label: "Ditolak", color: "var(--chart-1)" },
     terlewat: { label: "Terlewat", color: "var(--chart-4)" },
   } satisfies ChartConfig
 
@@ -96,16 +96,16 @@ export function ComplianceAreaChart({ data }: IProps) {
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <defs>
                 <linearGradient id="fillDiverifikasi" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0.1} />
-                </linearGradient>
-                <linearGradient id="fillTerkirim" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="var(--color-chart-2)" stopOpacity={0.8} />
                   <stop offset="95%" stopColor="var(--color-chart-2)" stopOpacity={0.1} />
                 </linearGradient>
-                <linearGradient id="fillDitolak" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="fillTerkirim" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="var(--color-chart-3)" stopOpacity={0.8} />
                   <stop offset="95%" stopColor="var(--color-chart-3)" stopOpacity={0.1} />
+                </linearGradient>
+                <linearGradient id="fillDitolak" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0.1} />
                 </linearGradient>
                 <linearGradient id="fillTerlewat" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="var(--color-chart-4)" stopOpacity={0.8} />
@@ -115,19 +115,19 @@ export function ComplianceAreaChart({ data }: IProps) {
               <Area
                 type="natural"
                 dataKey="diverifikasi"
-                stroke="var(--color-chart-1)"
+                stroke="var(--color-chart-2)"
                 fill="url(#fillDiverifikasi)"
               />
               <Area
                 type="natural"
                 dataKey="terkirim"
-                stroke="var(--color-chart-2)"
+                stroke="var(--color-chart-3)"
                 fill="url(#fillTerkirim)"
               />
               <Area
                 type="natural"
                 dataKey="ditolak"
-                stroke="var(--color-chart-3)"
+                stroke="var(--color-chart-1)"
                 fill="url(#fillDitolak)"
               />
               <Area

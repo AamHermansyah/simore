@@ -163,8 +163,16 @@ export async function getGuruSummary() {
       throw new Error("Guru tidak ditemukan");
     }
 
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
     const laporanAll = await prisma.laporan.findMany({
-      where: { siswi: { angkatan: { guruId: decoded.id } } },
+      where: {
+        siswi: { angkatan: { guruId: decoded.id } },
+        createdAt: {
+          gte: sixMonthsAgo,
+        },
+      },
       select: {
         id: true,
         status: true,

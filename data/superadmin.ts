@@ -47,3 +47,81 @@ export async function getSuperAdmin() {
     };
   }
 }
+
+export async function getSuperAdminSummary() {
+  try {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const [
+      totalSekolah,
+      totalGuru,
+      totalSiswi,
+      totalAngkatan,
+      laporan,
+      laporanTerkirim,
+      laporanDitolak,
+      laporanDiverifikasi,
+      laporanTerlewat,
+      laporanPerBulan,
+    ] = await Promise.all([
+      // Hitung semua sekolah
+      prisma.sekolah.count(),
+
+      // Hitung semua guru
+      prisma.guru.count(),
+
+      // Hitung semua siswi
+      prisma.siswi.count(),
+
+      // Hitung semua angkatan
+      prisma.angkatan.count(),
+
+      // Ambil laporan 6 bulan terakhir
+      prisma.laporan.findMany({
+        where: {
+          createdAt: {
+            gte: sixMonthsAgo
+          }
+        }
+      }),
+
+      // Hitung laporan berdasarkan status
+      prisma.laporan.count({ where: { status: "TERKIRIM" } }),
+      prisma.laporan.count({ where: { status: "DITOLAK" } }),
+      prisma.laporan.count({ where: { status: "DIVERIFIKASI" } }),
+      prisma.laporan.count({ where: { status: "TERLEWAT" } }),
+
+      // Statistik laporan per bulan
+      prisma.laporan.groupBy({
+        by: ["status"],
+        _count: { status: true },
+      }),
+    ])
+
+    return {
+      success: true,
+      data: {
+        totalSekolah,
+        totalGuru,
+        totalSiswi,
+        totalAngkatan,
+        totalLaporan: laporan.length,
+        laporan: {
+          terkirim: laporanTerkirim,
+          ditolak: laporanDitolak,
+          diverifikasi: laporanDiverifikasi,
+          terlewat: laporanTerlewat,
+          data: laporan
+        },
+        laporanPerBulan,
+      },
+    }
+  } catch (error) {
+    console.error("Error getSuperAdminSummary:", error)
+    return {
+      success: false,
+      message: "Gagal mengambil data summary super admin",
+    }
+  }
+}

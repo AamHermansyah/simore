@@ -118,7 +118,7 @@ export function AngkatanAddEditForm({
     }}>
       <AlertDialogContent className="sm:max-w-lg">
         <AlertDialogHeader>
-          <AlertDialogTitle>Tambah Angkatan</AlertDialogTitle>
+          <AlertDialogTitle>{type === 'add' ? 'Tambah' : 'Edit'} Angkatan</AlertDialogTitle>
           <AlertDialogDescription>Isi data angkatan untuk keperluan administrasi dan monitoring.</AlertDialogDescription>
         </AlertDialogHeader>
 

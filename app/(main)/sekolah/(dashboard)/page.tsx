@@ -1,57 +1,83 @@
 import React from 'react'
-import { RiScanLine } from "@remixicon/react";
+import { RiAwardLine, RiCheckboxCircleLine, RiCloseCircleLine, RiFileListLine, RiUserLine } from "@remixicon/react";
 import { StatsGrid } from "../../_components/stats-grid";
-import { ComplianceMonthlyChart } from '../_components/compliance-monthly-chart';
+import { getSekolahSummary } from '@/data/sekolah';
+import { ComplianceAreaChart } from '../../_components/compliance-area-chart';
+import { CompliancePieChart } from '../../_components/compliance-pie-chart';
 
-function SchoolDashboardPage() {
+async function SekolahDashboardPage() {
+  const res = await getSekolahSummary();
+  if (!res.success) throw new Error(res.message);
+
+  const data = res.data!;
+
   return (
-    <>
+    <div className="space-y-6">
+      {/* Salam dan welcome */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold">Dashboard Sekolah</h1>
+        <h1 className="text-2xl font-semibold">Halo, {data.nama}!</h1>
         <p className="text-sm text-muted-foreground">
-          Ringkasan kepatuhan, analisis, dan operasional program TTD.
+          Selamat datang di dashboard guru. Disini kamu bisa memonitor laporan siswi, kepatuhan, dan performa mingguan mereka.
         </p>
       </div>
 
+      {/* Statistik utama */}
       <StatsGrid
-        className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+        className="lg:grid-cols-4"
         stats={[
           {
-            title: "Kepatuhan (3 Bulan)",
-            value: "95%",
-            icon: <RiScanLine size={20} aria-hidden="true" />,
+            title: "Total Angkatan",
+            value: `${data.totalAngkatan}`,
+            icon: <RiUserLine size={20} aria-hidden="true" />,
           },
           {
-            title: "Siswi Aktif",
-            value: "655",
-            icon: <RiScanLine size={20} aria-hidden="true" />,
+            title: "Total Siswi",
+            value: `${data.totalSiswi}`,
+            icon: <RiUserLine size={20} aria-hidden="true" />,
           },
           {
-            title: "Laporan Minggu Ini",
-            value: "600",
-            icon: <RiScanLine size={20} aria-hidden="true" />,
+            title: "Total Laporan",
+            value: `${data.totalLaporan}`,
+            icon: <RiFileListLine size={20} aria-hidden="true" />,
           },
           {
-            title: "Tidak Melapor Minggu Ini",
-            value: "55",
-            icon: <RiScanLine size={20} aria-hidden="true" />,
+            title: "Kepatuhan",
+            value: `${data.kepatuhan}%`,
+            icon: <RiCheckboxCircleLine size={20} aria-hidden="true" />,
           },
           {
-            title: "Guru Aktif",
-            value: "22",
-            icon: <RiScanLine size={20} aria-hidden="true" />,
+            title: "Tidak Melapor",
+            value: `${data.totalTidakMelapor}x`,
+            icon: <RiCloseCircleLine size={20} aria-hidden="true" />,
           },
           {
-            title: "Jumlah Kelas",
-            value: "22",
-            icon: <RiScanLine size={20} aria-hidden="true" />,
+            title: "Rata-rata Poin Siswi",
+            value: `${data.avgPoinSiswi} Poin`,
+            icon: <RiAwardLine size={20} aria-hidden="true" />,
+          },
+          {
+            title: "Rata-rata Current Streak",
+            value: `${data.avgCurrentStreak}`,
+            icon: <RiAwardLine size={20} aria-hidden="true" />,
+          },
+          {
+            title: "Rata-rata Best Streak",
+            value: `${data.avgBestStreak}`,
+            icon: <RiAwardLine size={20} aria-hidden="true" />,
           },
         ]}
       />
 
-      <ComplianceMonthlyChart />
-    </>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-6 xl:col-span-7">
+          <ComplianceAreaChart data={data.laporan} />
+        </div>
+        <div className="lg:col-span-6 xl:col-span-5">
+          <CompliancePieChart data={data.laporan} />
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default SchoolDashboardPage;
+export default SekolahDashboardPage;

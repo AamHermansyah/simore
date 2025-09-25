@@ -80,7 +80,7 @@ export const navigations: NavigationGroup[] = [
       },
       {
         title: "Papan Skor",
-        url: "/siswi/peringkat",
+        url: "/guru/peringkat-siswi",
         icon: RiTrophyLine,
       },
       {
@@ -121,13 +121,8 @@ export const navigations: NavigationGroup[] = [
       },
       {
         title: "Papan Skor",
-        url: "/siswi/peringkat",
+        url: "/sekolah/peringkat-siswi",
         icon: RiTrophyLine,
-      },
-      {
-        title: "Analisis",
-        url: "/sekolah/analisis",
-        icon: RiBarChart2Line,
       },
       {
         title: "Profil",
@@ -151,9 +146,9 @@ export const navigations: NavigationGroup[] = [
         icon: RiTeamLine,
       },
       {
-        title: "Laporan",
-        url: "#",
-        icon: RiBarChart2Line,
+        title: "Papan Skor",
+        url: "/guru/siswi/peringkat",
+        icon: RiTrophyLine,
       },
       {
         title: "Profil",
@@ -292,9 +287,9 @@ export const getColorClasses = (color: string) => {
   return colors[color as keyof typeof colors] || colors.emerald;
 };
 
-// 0 - 6 (Senin - Minggu)
+// 0 - 6 (Minggu - Sabtu)
 export const submitTimes = {
-  day: 0 as Day,
+  day: 4 as Day,
   start: 6,
   end: 21,
   maxPoint: 200,

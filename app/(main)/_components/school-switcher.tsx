@@ -16,26 +16,22 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { RiExpandUpDownLine, RiAddLine } from "@remixicon/react";
+import Image from "next/image";
+import Link from "next/link";
+import { Roles } from "@/lib/types";
 
-const schools = [
-  {
-    name: "MA Al-Hikmah",
-    logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
-  },
-  {
-    name: "SMPN 1 Talegong",
-    logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
-  },
-  {
-    name: "SMPN 2 Tasikmalaya",
-    logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
-  },
-];
+interface IProps {
+  data: {
+    id: string;
+    nama: string;
+  }[];
+  role: Roles;
+}
 
-export function SchoolSwitcher() {
-  const [activeSchool, setActiveSchool] = React.useState(schools[0] ?? null);
+export function SchoolSwitcher({ data, role }: IProps) {
+  const [activeSchool, setActiveSchool] = React.useState(data[0] ?? null);
 
-  if (!schools.length) return null;
+  if (!data.length) return null;
 
   return (
     <SidebarMenu>
@@ -43,22 +39,23 @@ export function SchoolSwitcher() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
+              disabled={['SISWI', 'GURU', 'SEKOLAH'].includes(role)}
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground gap-3 [&>svg]:size-auto"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground gap-3 [&>svg]:size-auto disabled:opacity-100"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-md overflow-hidden bg-sidebar-primary text-sidebar-primary-foreground">
-                {activeSchool && (
-                  <img
-                    src={activeSchool.logo}
-                    width={36}
-                    height={36}
-                    alt={activeSchool.name}
+              {activeSchool && (
+                <div className="relative size-8 bg-white rounded-full overflow-hidden border">
+                  <Image
+                    src="/logo.png"
+                    alt="logo"
+                    fill
+                    className="p-1"
                   />
-                )}
-              </div>
+                </div>
+              )}
               <div className="grid flex-1 text-left text-base leading-tight">
                 <span className="truncate font-medium">
-                  {activeSchool?.name ?? "Select a Team"}
+                  {activeSchool?.nama ?? "Select a Team"}
                 </span>
               </div>
               <RiExpandUpDownLine
@@ -77,23 +74,34 @@ export function SchoolSwitcher() {
             <DropdownMenuLabel className="uppercase text-muted-foreground/60 text-xs">
               Sekolah
             </DropdownMenuLabel>
-            {schools.map((team) => (
+            {data.map((team) => (
               <DropdownMenuItem
-                key={team.name}
+                key={team.nama}
                 onClick={() => setActiveSchool(team)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md overflow-hidden">
-                  <img src={team.logo} width={36} height={36} alt={team.name} />
+                <div className="relative size-6 bg-white rounded-full overflow-hidden border">
+                  <Image
+                    src="/logo.png"
+                    alt="logo"
+                    fill
+                    className="p-1"
+                  />
                 </div>
-                {team.name}
+                {team.nama}
               </DropdownMenuItem>
             ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <RiAddLine className="opacity-60" size={16} aria-hidden="true" />
-              <div className="font-medium">Tambah Sekolah</div>
-            </DropdownMenuItem>
+            {role === 'SUPERADMIN' && (
+              <>
+                <DropdownMenuSeparator />
+                <Link href="/admin/sekolah">
+                  <DropdownMenuItem className="gap-2 p-2">
+                    <RiAddLine className="opacity-60" size={16} aria-hidden="true" />
+                    <div className="font-medium">Tambah Sekolah</div>
+                  </DropdownMenuItem>
+                </Link>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

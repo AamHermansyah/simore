@@ -78,7 +78,10 @@ export async function updateAngkatan(values: Omit<AddAngkatanFormValues, 'type'>
     const data = parsed.data;
 
     const existing = await prisma.angkatan.findFirst({
-      where: { nama: data.nama },
+      where: {
+        nama: data.nama,
+        NOT: { id }
+      },
     })
 
     if (existing) {
