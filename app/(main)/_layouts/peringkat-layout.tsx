@@ -122,7 +122,7 @@ function PeringkatLayout({ data, angkatanData, siswi }: IProps) {
       {siswi && (!angkatanId || (angkatanId === siswi.angkatan?.id)) && (
         <MyRankCard
           nama={siswi.nama}
-          angkatan={siswi.angkatan?.nama!}
+          angkatan={siswi.angkatan!.nama}
           rank={
             (() => {
               const idx = data.findIndex((d) => d.id === siswi.id)
