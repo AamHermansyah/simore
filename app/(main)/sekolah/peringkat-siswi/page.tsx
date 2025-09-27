@@ -3,7 +3,6 @@ import PeringkatLayout from '../../_layouts/peringkat-layout'
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, JwtPayload } from '@/lib/auth';
-import prisma from '@/lib/prisma';
 import { getSiswiRanking } from '@/data/siswi';
 import { getAllAngkatan } from '@/data/angkatan';
 
