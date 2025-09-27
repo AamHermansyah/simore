@@ -292,6 +292,11 @@ export async function getSekolahList() {
           select: {
             sekolah: { select: { id: true, nama: true } },
           },
+          orderBy: {
+            sekolah: {
+              nama: "asc",
+            },
+          },
         })
         sekolahList = sekolahs.map((s) => s.sekolah)
         break

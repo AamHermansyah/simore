@@ -165,3 +165,63 @@ export async function getSiswiSummary() {
     }
   }
 }
+
+export async function getSiswiRanking(
+  angkatanId?: string,
+  sekolahId?: string
+) {
+  try {
+    if (!sekolahId) {
+      throw new Error("sekolahId wajib diisi")
+    }
+
+    let siswiList
+
+    if (angkatanId) {
+      // Ranking per angkatan
+      siswiList = await prisma.siswi.findMany({
+        where: { angkatanId },
+        select: {
+          id: true,
+          nama: true,
+          angkatan: { select: { nama: true } },
+          poin: true,
+          bestStreak: true,
+        },
+        orderBy: { poin: "desc" },
+        take: 99,
+      })
+    } else {
+      // Ranking per sekolah
+      siswiList = await prisma.siswi.findMany({
+        where: { angkatan: { sekolahId } },
+        select: {
+          id: true,
+          nama: true,
+          angkatan: { select: { nama: true } },
+          poin: true,
+          bestStreak: true,
+        },
+        orderBy: { poin: "desc" },
+        take: 99,
+      })
+    }
+
+    return {
+      success: true,
+      data: siswiList.map((s, i) => ({
+        id: s.id,
+        rank: i + 1,
+        nama: s.nama,
+        angkatan: s.angkatan!.nama,
+        totalPoint: s.poin,
+        bestStrike: s.bestStreak,
+      })),
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as Error).message || "Terjadi kesalahan",
+    }
+  }
+}

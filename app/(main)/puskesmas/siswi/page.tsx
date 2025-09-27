@@ -23,7 +23,12 @@ async function PuskesmasDashboardPage({ searchParams }: IProps) {
       select: {
         sekolah: { select: { id: true, nama: true } },
       },
-    });
+      orderBy: {
+        sekolah: {
+          nama: "asc",
+        },
+      },
+    })
 
     if (!sekolah?.sekolah) throw Error('Sekolah yang dipilih tidak ditemukan');
     sekolahId = sekolah.sekolah.id;

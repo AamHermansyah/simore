@@ -1,9 +1,47 @@
-import PeringkatLayout from '@/app/(main)/_layouts/peringkat-layout'
 import React from 'react'
+import PeringkatLayout from '../../_layouts/peringkat-layout'
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET, JwtPayload } from '@/lib/auth';
+import prisma from '@/lib/prisma';
+import { getSiswiRanking } from '@/data/siswi';
+import { getAllAngkatan } from '@/data/angkatan';
 
-function GuruSiswiPeringkatPage() {
+interface IProps {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}
+
+async function GuruSiswiPeringkatPage({ searchParams }: IProps) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  const angkatanId = (await searchParams).angkatanId;
+
+  const decoded = jwt.verify(token!, JWT_SECRET) as JwtPayload;
+  if (!decoded?.id) {
+    throw new Error("Token tidak valid");
+  }
+
+  const guru = await prisma.guru.findUnique({
+    where: { id: decoded.id },
+    select: {
+      id: true,
+      sekolahId: true
+    }
+  });
+
+  if (!guru) throw new Error('Guru tidak ditemukan');
+
+  const res = await getSiswiRanking(angkatanId, guru.sekolahId!);
+  if (!res.success) throw new Error(res.message);
+
+  const resAngkatan = await getAllAngkatan({ limit: 1000, page: 1, sekolahId: guru.sekolahId! });
+  if (!resAngkatan.success) throw new Error(res.message);
+
   return (
-    <PeringkatLayout />
+    <PeringkatLayout
+      data={res.data!}
+      angkatanData={resAngkatan.data!.items}
+    />
   )
 }
 
