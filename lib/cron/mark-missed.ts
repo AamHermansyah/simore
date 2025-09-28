@@ -27,7 +27,7 @@ cron.schedule("0 21 * * 4", async () => {
     const batchSize = 100;
     for (let i = 0; i < allSiswi.length; i += batchSize) {
       const batch = allSiswi.slice(i, i + batchSize);
-      const transactions: any[] = [];
+      const transactions: unknown[] = [];
 
       for (const siswi of batch) {
         const laporan = await prisma.laporan.findFirst({
@@ -69,6 +69,7 @@ cron.schedule("0 21 * * 4", async () => {
       }
 
       if (transactions.length > 0) {
+        // @ts-expect-error sangat sulit untuk menulis tipe data transactions jadi dipaksa unknown
         await prisma.$transaction(transactions);
       }
 
@@ -101,7 +102,7 @@ cron.schedule("0 18 * * 3", async () => {
     const batchSize = 100;
     for (let i = 0; i < allSiswi.length; i += batchSize) {
       const batch = allSiswi.slice(i, i + batchSize);
-      const transactions: any[] = [];
+      const transactions: unknown[] = [];
 
       for (const siswi of batch) {
         const laporan = await prisma.laporan.findFirst({
@@ -139,6 +140,7 @@ cron.schedule("0 18 * * 3", async () => {
       }
 
       if (transactions.length > 0) {
+        // @ts-expect-error sangat sulit untuk menulis tipe data transactions jadi dipaksa unknown
         await prisma.$transaction(transactions);
       }
 
@@ -165,7 +167,7 @@ cron.schedule("0 0 * * 3", async () => {
     for (let i = 0; i < allLaporan.length; i += batchSize) {
       const batch = allLaporan.slice(i, i + batchSize);
 
-      const transactions: any[] = [];
+      const transactions: unknown[] = [];
 
       for (const laporan of batch) {
         const newCurrentStreak = (laporan.siswi.currentStreak ?? 0) + 1;
@@ -205,6 +207,7 @@ cron.schedule("0 0 * * 3", async () => {
       }
 
       if (transactions.length > 0) {
+        // @ts-expect-error sangat sulit untuk menulis tipe data transactions jadi dipaksa unknown
         await prisma.$transaction(transactions);
       }
 
