@@ -34,7 +34,7 @@ async function SiswiLaporanPage() {
       }
 
       // Cari hari sabtu minggu ini
-      const weekStart = startOfWeek(now, { weekStartsOn: 0 }); // minggu = 0
+      const weekStart = startOfWeek(now, { weekStartsOn: 0 });
       const thisIsTargetDay = addDays(weekStart, submitTimes.day);
 
       // Batas waktu mulai & selesai laporan
@@ -58,7 +58,7 @@ async function SiswiLaporanPage() {
         },
       });
 
-      if (laporan) {
+      if (laporan && (laporan.status !== 'TERLEWAT')) {
         hasSubmited = true;
         canAccess = false;
       }

@@ -62,3 +62,7 @@ export const getWeekStartEnd = (now: Date) => {
   const weekEnd = addDays(weekStart, 6);
   return { weekStart, weekEnd };
 };
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

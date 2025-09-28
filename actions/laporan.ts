@@ -104,8 +104,7 @@ export async function addLaporan(
 }
 
 export async function updateLaporan(
-  values: Omit<AddLaporanSchema, "foto"> & { buktiGambar: string },
-  id: string
+  values: Omit<AddLaporanSchema, "foto"> & { buktiGambar: string }
 ) {
   const now = new Date();
   const day = now.getDay();
@@ -236,11 +235,23 @@ export async function updateStatusLaporan(params: UpdateStatusParams) {
 
     if (type === "approve") {
       // Hitung streak
-      const newCurrentStreak = (laporan.siswi.currentStreak ?? 0) + 1
+      const newCurrentStreak = (laporan.siswi.currentStreak ?? 0) + 1;
       const newBestStreak = Math.max(
         laporan.siswi.bestStreak ?? 0,
         newCurrentStreak
-      )
+      );
+
+      // Hitung reward point dasar
+      let totalReward = laporan.rewardPoint;
+
+      // Tambahkan bonus berdasarkan streak
+      if (newCurrentStreak === 5) {
+        totalReward += 500;
+      } else if (newCurrentStreak === 10) {
+        totalReward += 1100;
+      } else if (newCurrentStreak > 10 && newCurrentStreak % 10 === 0) {
+        totalReward += 1200;
+      }
 
       // Update laporan & siswi
       await prisma.$transaction([
@@ -254,12 +265,12 @@ export async function updateStatusLaporan(params: UpdateStatusParams) {
         prisma.siswi.update({
           where: { id: laporan.siswiId },
           data: {
-            poin: laporan.siswi.poin + laporan.rewardPoint,
+            poin: laporan.siswi.poin + totalReward,
             currentStreak: newCurrentStreak,
             bestStreak: newBestStreak,
           },
         }),
-      ])
+      ]);
     }
 
     return {

@@ -18,11 +18,10 @@ import { useRouter } from "next/navigation"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface IProps {
-  laporanId: string;
   keluhan: string | null;
 }
 
-function LaporanUpdateLayout({ laporanId, keluhan }: IProps) {
+function LaporanUpdateLayout({ keluhan }: IProps) {
   const [loading, startServer] = useTransition();
   const [error, setError] = useState('');
   const navigate = useRouter();
@@ -54,7 +53,7 @@ function LaporanUpdateLayout({ laporanId, keluhan }: IProps) {
         const res = await updateLaporan({
           keluhan: values.keluhan,
           buktiGambar: imageBase64
-        }, laporanId);
+        });
 
         if (res.success) {
           toast.success(res.message);

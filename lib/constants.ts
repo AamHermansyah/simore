@@ -10,6 +10,7 @@ import {
   RiProfileLine,
   RiGraduationCapLine,
   RiTaskLine,
+  RiAlertLine,
 } from "@remixicon/react";
 import {
   BarChart3,
@@ -52,6 +53,11 @@ export const navigations: NavigationGroup[] = [
         icon: RiTrophyLine,
       },
       {
+        title: "Panduan",
+        url: "/siswi/panduan",
+        icon: RiAlertLine,
+      },
+      {
         title: "Profil",
         url: "/siswi/profil",
         icon: RiProfileLine,
@@ -81,6 +87,11 @@ export const navigations: NavigationGroup[] = [
         title: "Papan Skor",
         url: "/guru/peringkat-siswi",
         icon: RiTrophyLine,
+      },
+      {
+        title: "Panduan",
+        url: "/siswi/panduan",
+        icon: RiAlertLine,
       },
       {
         title: "Profil",
@@ -122,6 +133,11 @@ export const navigations: NavigationGroup[] = [
         title: "Papan Skor",
         url: "/sekolah/peringkat-siswi",
         icon: RiTrophyLine,
+      },
+      {
+        title: "Panduan",
+        url: "/siswi/panduan",
+        icon: RiAlertLine,
       },
       {
         title: "Profil",

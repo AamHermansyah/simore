@@ -234,19 +234,21 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
                           <div className="text-xs text-muted-foreground">NISN {laporan.siswi.nisn}</div>
                         </TableCell>
                         <TableCell>
-                          <ImageZoom
-                            backdropClassName={cn(
-                              '[&_[data-rmiz-modal-overlay="visible"]]:bg-black/80'
-                            )}
-                          >
-                            <div className="mx-auto w-[70px] aspect-[2/3] bg-muted rounded overflow-hidden">
-                              <img
-                                src={laporan.buktiGambar}
-                                alt="bukti gambar"
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          </ImageZoom>
+                          {laporan.buktiGambar ? (
+                            <ImageZoom
+                              backdropClassName={cn(
+                                '[&_[data-rmiz-modal-overlay="visible"]]:bg-black/80'
+                              )}
+                            >
+                              <div className="mx-auto w-[70px] aspect-[2/3] bg-muted rounded overflow-hidden">
+                                <img
+                                  src={laporan.buktiGambar}
+                                  alt="bukti gambar"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            </ImageZoom>
+                          ) : <p className="text-center">-</p>}
                         </TableCell>
                         <TableCell>
                           {format(laporan.createdAt, "dd MMMM yyyy", { locale: id })}
