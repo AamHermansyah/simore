@@ -74,6 +74,16 @@ export default function NoteAlert() {
               </div>
             </div>
           ))}
+
+          <Separator className="my-6" />
+
+          <div className="p-4 rounded-xl border bg-blue-50 text-blue-700 text-sm flex items-start gap-2">
+            <Info className="w-5 h-5 mt-0.5" />
+            <p>
+              Seluruh <span className="font-semibold">poin akan direset setiap 3 bulan sekali</span>.
+              Pastikan selalu mengumpulkan laporan tepat waktu untuk menjaga XP anda tetap tinggi!
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -20,6 +20,13 @@ async function PuskesmasDashboardPage({ searchParams }: IProps) {
   const decoded = verifyJwt(token || "") as JwtPayload | null
   if (!decoded) throw new Error('Token invalid');
 
+  const puskesmas = await prisma.puskesmas.findUnique({
+    where: { id: decoded.id },
+    select: { nama: true }
+  });
+
+  if (!puskesmas) throw new Error('Puskesmas tidak ditemukan');
+
   if (!sekolahId) {
     const sekolah = await prisma.puskesmasSekolah.findFirst({
       where: { puskesmasId: decoded.id },
@@ -46,7 +53,7 @@ async function PuskesmasDashboardPage({ searchParams }: IProps) {
     <div className="space-y-6">
       {/* Salam dan welcome */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold">Halo, {data.nama}!</h1>
+        <h1 className="text-2xl font-semibold">Halo, {puskesmas.nama}!</h1>
         <p className="text-sm text-muted-foreground">
           Selamat datang di dashboard sekolah <b>{data.nama}</b>. Disini kamu bisa memonitor laporan siswi, kepatuhan, dan performa mingguan mereka.
         </p>
