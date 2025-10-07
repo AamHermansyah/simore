@@ -30,7 +30,18 @@ export async function GET(req: Request, { params }: IParams) {
     const parsed = z.object({
       ...paginationSchema,
       angkatanId: z.string().optional(),
-      status: z.enum(Object.values(StatusLaporan)).optional()
+      status: z.enum(Object.values(StatusLaporan)).optional(),
+      time: z
+        .enum([
+          "all",
+          "minggu-ini",
+          "bulan-ini",
+          "tahun-ini",
+          "7-hari-terakhir",
+          "30-hari-terakhir",
+          "365-hari-terakhir",
+        ])
+        .optional()
     }).safeParse(searchParams);
 
     if (!parsed.success) {
@@ -41,9 +52,17 @@ export async function GET(req: Request, { params }: IParams) {
       )
     }
 
-    const { q = "", page, limit, status, angkatanId } = parsed.data;
+    const { q = "", page, limit, status, angkatanId, time } = parsed.data;
 
-    const res = await getAllLaporan({ q, page, limit, sekolahId, angkatanId, status });
+    const res = await getAllLaporan({
+      q,
+      page,
+      limit,
+      sekolahId,
+      angkatanId,
+      status,
+      time
+    });
     if (!res.success) {
       return new NextResponse(res.message, { status: 500 });
     }

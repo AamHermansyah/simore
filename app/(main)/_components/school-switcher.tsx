@@ -19,7 +19,7 @@ import { RiExpandUpDownLine, RiAddLine } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Roles } from "@/lib/types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface IProps {
   data: {
@@ -31,7 +31,6 @@ interface IProps {
 
 export function SchoolSwitcher({ data, role }: IProps) {
   const [activeSchool, setActiveSchool] = React.useState(data[0] ?? null);
-  const navigate = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -40,7 +39,7 @@ export function SchoolSwitcher({ data, role }: IProps) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("sekolahId", id);
 
-    navigate.replace(`${pathname}?${params.toString()}`);
+    window.location.href = `${pathname}?${params.toString()}`;
   };
 
   if (!data.length) return null;

@@ -90,7 +90,7 @@ export const navigations: NavigationGroup[] = [
       },
       {
         title: "Panduan",
-        url: "/siswi/panduan",
+        url: "/guru/panduan",
         icon: RiAlertLine,
       },
       {

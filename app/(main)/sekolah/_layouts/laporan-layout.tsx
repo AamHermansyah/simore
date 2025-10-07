@@ -77,6 +77,7 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
   const q = searchParams.get('q') || '';
   const angkatanId = searchParams.get('angkatanId');
   const status = searchParams.get('status');
+  const time = searchParams.get('time');
   const page = searchParams.get('page') || '1';
   const navigate = useRouter();
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
@@ -85,7 +86,8 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
     keyword: string,
     page: string,
     angkatanId: string | null,
-    status: string | null
+    status: string | null,
+    time: string | null
   ) => {
     if (cancelTokenSource.current) {
       cancelTokenSource.current.cancel('Operation canceled due to new request.');
@@ -103,7 +105,8 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
           limit: pagination.limit || 10,
           page: typeof page === 'string' && !isNaN(+page) ? +page : 1,
           angkatanId,
-          status
+          status,
+          time
         },
         cancelToken: source.token,
       })
@@ -136,8 +139,8 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
   }
 
   useEffect(() => {
-    fetch(q, page, angkatanId, status);
-  }, [q, page, angkatanId, status]);
+    fetch(q, page, angkatanId, status, time);
+  }, [q, page, angkatanId, status, time]);
 
   return (
     <div className="space-y-4">
@@ -152,12 +155,12 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
 
       {/* Filter bar */}
       <div className="w-full flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
-        <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-2">
+        <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-2">
           <SearchInput
             defaultValue={q}
             onChange={handleSearch}
             placeholder="Cari nama atau NISN"
-            className="w-full sm:w-auto max-w-none"
+            className="w-full lg:w-auto max-w-none"
           />
           <Select
             defaultValue={angkatanId || 'all'}
@@ -172,7 +175,7 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
               navigate.replace(`?${params.toString()}`)
             }}
           >
-            <SelectTrigger className="w-full sm:w-42">
+            <SelectTrigger className="w-full lg:w-42">
               <SelectValue placeholder="Kelas" />
             </SelectTrigger>
             <SelectContent>
@@ -197,7 +200,7 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
               navigate.replace(`?${params.toString()}`)
             }}
           >
-            <SelectTrigger className="w-full sm:w-38">
+            <SelectTrigger className="w-full lg:w-38">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -207,6 +210,31 @@ export default function LaporanLayout({ sekolahId, angkatanData }: IProps) {
                   {status}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select
+            defaultValue={time || "all"}
+            onValueChange={(value) => {
+              const params = new URLSearchParams(searchParams.toString());
+              if (value === "all") {
+                params.delete("time");
+              } else {
+                params.set("time", value);
+              }
+              navigate.replace(`?${params.toString()}`);
+            }}
+          >
+            <SelectTrigger className="w-full lg:w-44">
+              <SelectValue placeholder="Waktu" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Waktu</SelectItem>
+              <SelectItem value="minggu-ini">Minggu Ini</SelectItem>
+              <SelectItem value="bulan-ini">Bulan Ini</SelectItem>
+              <SelectItem value="tahun-ini">Tahun Ini</SelectItem>
+              <SelectItem value="7-hari-terakhir">1 Minggu Terakhir</SelectItem>
+              <SelectItem value="30-hari-terakhir">1 Bulan Terakhir</SelectItem>
+              <SelectItem value="365-hari-terakhir">1 Tahun Terakhir</SelectItem>
             </SelectContent>
           </Select>
         </div>

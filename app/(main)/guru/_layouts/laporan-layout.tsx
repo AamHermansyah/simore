@@ -70,6 +70,7 @@ export default function LaporanLayout({ angkatanId }: IProps) {
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
   const status = searchParams.get('status');
+  const time = searchParams.get('time');
   const page = searchParams.get('page') || '1';
   const navigate = useRouter();
   const cancelTokenSource = useRef<CancelTokenSource | null>(null);
@@ -77,7 +78,8 @@ export default function LaporanLayout({ angkatanId }: IProps) {
   const fetch = useCallback((
     keyword: string,
     page: string,
-    status: string | null
+    status: string | null,
+    time: string | null
   ) => {
     if (cancelTokenSource.current) {
       cancelTokenSource.current.cancel('Operation canceled due to new request.');
@@ -94,7 +96,8 @@ export default function LaporanLayout({ angkatanId }: IProps) {
           q: keyword,
           limit: pagination.limit || 10,
           page: typeof page === 'string' && !isNaN(+page) ? +page : 1,
-          status
+          status,
+          time
         },
         cancelToken: source.token,
       })
@@ -127,8 +130,8 @@ export default function LaporanLayout({ angkatanId }: IProps) {
   }
 
   useEffect(() => {
-    fetch(q, page, status);
-  }, [q, page, status]);
+    fetch(q, page, status, time);
+  }, [q, page, status, time]);
 
   return (
     <div className="space-y-4">
@@ -173,6 +176,31 @@ export default function LaporanLayout({ angkatanId }: IProps) {
                   {status}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select
+            defaultValue={time || "all"}
+            onValueChange={(value) => {
+              const params = new URLSearchParams(searchParams.toString());
+              if (value === "all") {
+                params.delete("time");
+              } else {
+                params.set("time", value);
+              }
+              navigate.replace(`?${params.toString()}`);
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-44">
+              <SelectValue placeholder="Waktu" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Waktu</SelectItem>
+              <SelectItem value="minggu-ini">Minggu Ini</SelectItem>
+              <SelectItem value="bulan-ini">Bulan Ini</SelectItem>
+              <SelectItem value="tahun-ini">Tahun Ini</SelectItem>
+              <SelectItem value="7-hari-terakhir">1 Minggu Terakhir</SelectItem>
+              <SelectItem value="30-hari-terakhir">1 Bulan Terakhir</SelectItem>
+              <SelectItem value="365-hari-terakhir">1 Tahun Terakhir</SelectItem>
             </SelectContent>
           </Select>
         </div>
