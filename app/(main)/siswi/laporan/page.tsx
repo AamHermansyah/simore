@@ -1,7 +1,7 @@
 import React from "react";
 import LaporanLayout from "../_layouts/laporan-layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Timer } from "lucide-react";
+import { Check, Timer } from "lucide-react";
 import { submitTimes } from "@/lib/constants";
 import { getDayName } from "@/lib/utils";
 import { cookies } from "next/headers";
@@ -101,6 +101,27 @@ async function SiswiLaporanPage() {
                 </div>
               </CardContent>
             </Card>
+          ) : laporan!.status === 'DIVERIFIKASI' ? (
+            <Card>
+              <CardContent className="max-w-lg text-center">
+                <div className="flex items-center justify-center mb-4">
+                  <Check className="size-16 mx-auto text-emerald-500" />
+                </div>
+                <h1 className="text-xl font-extrabold text-emerald-600 mb-3">
+                  Laporan Diverifikasi😍
+                </h1>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Yeay... laporan minggu ini telah diverifikasi!
+                </p>
+                <div className="bg-emerald-500 text-white text-center border rounded-xl p-4 mb-6 space-y-2">
+                  <p className="font-semibold">Terima kasih atas kedisiplinanmu!</p>
+                  <span className="block text-2xl font-bold">+{laporan!.rewardPoint} Poin</span>
+                </div>
+                <p className="text-sm text-muted-foreground italic">
+                  Silakan kembali minggu depan untuk mengirim laporan berikutnya.
+                </p>
+              </CardContent>
+            </Card>
           ) : (
             <Card>
               <CardContent className="max-w-lg text-center">
@@ -115,7 +136,7 @@ async function SiswiLaporanPage() {
                 </p>
                 <div className="bg-sky-500 text-white text-center border rounded-xl p-4 mb-6 space-y-2">
                   <p className="font-semibold">Terima kasih atas kedisiplinanmu!</p>
-                  <span className="block text-2xl font-bold">+{laporan!.rewardPoint} Poin</span>
+                  <span className="block text-2xl font-bold">+{laporan!.rewardPoint} Poin (Pending)</span>
                 </div>
                 <p className="text-sm text-muted-foreground italic">
                   Silakan kembali minggu depan untuk mengirim laporan berikutnya.

@@ -136,7 +136,7 @@ export const navigations: NavigationGroup[] = [
       },
       {
         title: "Panduan",
-        url: "/siswi/panduan",
+        url: "/sekolah/panduan",
         icon: RiAlertLine,
       },
       {

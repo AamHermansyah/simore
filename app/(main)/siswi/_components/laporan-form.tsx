@@ -52,7 +52,7 @@ function LaporanForm() {
 
         if (res.success) {
           toast.success(res.message);
-          navigate.push('/siswi/riwayat');
+          navigate.refresh();
         } else setError(res.message);
 
       } catch (error) {

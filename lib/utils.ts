@@ -21,7 +21,7 @@ export function calculateRewardPoint(now: Date) {
   }
 
   // Hitung selisih jam dari jam mulai
-  const diff = hour - submitTimes.start;
+  const diff = (hour - submitTimes.start) - submitTimes.start;
 
   // Poin = maxPoint - (diff * step)
   const point = submitTimes.maxPoint - diff * submitTimes.step;
