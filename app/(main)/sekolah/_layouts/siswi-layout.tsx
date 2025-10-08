@@ -45,6 +45,7 @@ import axios, { CancelTokenSource, isAxiosError } from "axios";
 import { Angkatan, Guru, Siswi } from "@/lib/generated/prisma";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SiswiAddEditForm } from "../_components/siswi-add-edit-form";
+import { Pagination } from "@/components/ui/pagination";
 
 type SiswiData = Siswi & {
   angkatan: Angkatan | null;
@@ -307,6 +308,16 @@ export default function SiswiLayout({ sekolahId, angkatanData }: IProps) {
               )}
             </TableBody>
           </Table>
+
+          {pagination.totalPages > 1 && (
+            <div className="w-full flex justify-end pt-4">
+              <Pagination
+                className="w-max mx-0"
+                page={pagination.page}
+                pages={pagination.totalPages}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
