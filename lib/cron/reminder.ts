@@ -67,11 +67,11 @@ cron.schedule("0 6 * * 4", async () => {
         }
 
         // Delay antar pesan
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 10000));
       }
 
       // Delay antar batch (biar stabil)
-      await new Promise((r) => setTimeout(r, 200));
+      await new Promise((r) => setTimeout(r, 1000));
     }
 
     console.log("Cron Reminder WA selesai ✅");
@@ -146,7 +146,7 @@ cron.schedule("0 15 * * 4", async () => {
           }
 
           // Delay antar pesan supaya aman dari rate limit
-          await new Promise((r) => setTimeout(r, 1000));
+          await new Promise((r) => setTimeout(r, 10000));
         }
       }
 

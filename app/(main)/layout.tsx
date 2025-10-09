@@ -14,11 +14,11 @@ async function MainLayout({ children }: { children: React.ReactNode }) {
   const role = c.get('role')!.value as Roles;
   const res = await getSekolahList();
 
-  if (!res.success || (!res.data!.length)) throw new Error(res.message || 'Daftar sekolah tidak ditemukan')
+  if (!res.success) throw new Error(res.message || 'Daftar sekolah tidak ditemukan')
 
   return (
     <SidebarProvider>
-      <AppSidebar role={role} sekolahs={res.data!} />
+      <AppSidebar role={role} sekolahs={res.data!.length > 0 ? res.data! : []} />
       <SidebarInset className="overflow-hidden px-4 md:px-6">
         <Navbar />
         <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">
